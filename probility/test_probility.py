@@ -42,11 +42,28 @@ plt.savefig('images/random_dist.png', format='png')
 print "p: %s; exp_count:%s; match_ratio: %.3f" % (p, ec, ep)
 
 p = 0.03
-ec = 10000
-
+ec = 1000
 ep,rst = test_p(p, ec)
 print "p: %s; exp_count:%s; match_ratio: %.3f" % (p, ec, ep)
 
 plt.clf()
 plt.plot(rst, 'bo')
-plt.savefig('images/random_dist2.png', format='png')
+plt.savefig('images/random_dist003_1.png', format='png')
+
+p = 0.03
+ec = 10000
+ep,rst = test_p(p, ec)
+print "p: %s; exp_count:%s; match_ratio: %.3f" % (p, ec, ep)
+
+plt.clf()
+plt.plot(rst, 'bo')
+plt.savefig('images/random_dist003_2.png', format='png')
+
+p = 0.03
+ec = 100000
+ep,rst = test_p(p, ec)
+print "p: %s; exp_count:%s; match_ratio: %.3f" % (p, ec, ep)
+
+plt.clf()
+plt.plot(rst, 'bo')
+plt.savefig('images/random_dist003_3.png', format='png')
