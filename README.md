@@ -13,7 +13,7 @@
 >   images:[images](probility/images)
 
 ####    2). 标准正态分布表
->  主要转换了网上的标准正态分布表，并增加了根据x计算概率，和根据概率计算x的功能
+>  主要转换了网上的标准正态分布表，并增加了算标准的Fx, Fx<sup>-1</sup>的功能
 
 >   [probility/standard_normal_dist.py](probility/standard_normal_dist.py)
 
