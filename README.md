@@ -5,6 +5,7 @@
 ####    1). 不同分布随机数的生成。
 
 >  包括从uniform生成符合正态分布、符合指数分布的随机数; 根据标准正态分布表汇制不同mu,sigma参数的正态分布图; 生成指数分布图；根据数据集合，生成直方图
+   备注下：用plt.bar生成柱状图时，需要 加条件:align='edge', 默认取 middle
 
 >   code:[gen_distribute_from_U.py](probility/gen_distribute_from_U.py)
 
