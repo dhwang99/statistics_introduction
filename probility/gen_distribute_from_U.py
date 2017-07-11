@@ -46,11 +46,7 @@ f = 1/(sqrt(2*pi) * sigma) * exp(-(x-mu)^2/(2*sigma^2))
 '''
 def gen_gauss_distribute_pdf(mu, sigma, sample_count, max_x):
     gauss_x = np.linspace(-max_x, max_x, sample_count)
-    gauss_y = np.zeros(len(gauss_x))
-
-    for id in range(len(gauss_x)): 
-        x = gauss_x[id]
-        gauss_y[id] = 1/(np.sqrt(2 * np.pi) * sigma) * np.exp(-(x-mu)**2/(2*sigma**2))
+    gauss_y = map(lambda x:1/(np.sqrt(2 * np.pi) * sigma) * np.exp(-(x-mu)**2/(2*sigma**2)), gauss_x)
 
     return gauss_x, gauss_y
 
@@ -126,12 +122,6 @@ def gen_exp_distribute_pdf(sample_count, beta, max_x):
 
     return x,y
 
-
-
-#print num_has_gauss_dis
-
-#draw Histogram
-
 #分组的数量在5－12之间较为适宜(本程序用的是下一条)
 #一般取总样本数开平方取上界. 上一个分组算法一般认为不合理
 #分得越细，和曲线偏差越大,但好看；分得粗，不好看
@@ -139,22 +129,25 @@ sample_count = 1000
 group_count = int(np.sqrt(sample_count) + 0.9999) 
 
 sim_gauss_num = gen_gauss_samples_byU(sample_count)
-#绘制高斯采样的直方图
-plt_hist(sim_gauss_num, normed=True)
-
-#绘制正态分布图
-dis = np.max(sim_gauss_num)
-gauss_x, gauss_y = gen_gauss_distribute_pdf(0, 1, sample_count, dis)
-plt.plot(gauss_x, gauss_y, color='g')
-
 mean_val = np.mean(sim_gauss_num)
 std_val = np.std(sim_gauss_num)
 print "mean, std:", mean_val, std_val
 
-#plt_gauss_distribute(0, 2, 'r')
-#plt_gauss_distribute(1, 2, 'k')
+#绘制高斯采样的直方图
+plt_hist(sim_gauss_num, normed=True)
+
+#叠加正态分布图
+gauss_x, gauss_y = gen_gauss_distribute_pdf(0, 1, sample_count, np.max(sim_gauss_num))
+plt.plot(gauss_x, gauss_y, color='g')
 
 plt.savefig('images/norm_distribute_gen_by_U.png', format='png')
+
+#绘制正态分布图.两种生成方法，对比一下误差
+plt.clf()
+gauss_x2, gauss_y2 = gen_gauss_distribute_pdf_from_dist_table(0, 1)
+plt.plot(gauss_x, gauss_y, 'g-.')
+plt.plot(gauss_x2, gauss_y2, 'r--')
+plt.savefig('images/norm_distribute.png', format='png')
 
 #指数分布相关
 plt.clf()
@@ -162,7 +155,7 @@ sim_num = gen_exp_samples_byU(sample_count, 1)
 #绘制指数采样直方图
 plt.hist(sim_num, bins = group_count, normed=True)
 
-#绘制标准指数分布图
+#叠加标准指数分布图
 exp_x, exp_y = gen_exp_distribute_pdf(sample_count, 1, np.max(sim_num))
 plt.plot(exp_x, exp_y, color='g')
 
