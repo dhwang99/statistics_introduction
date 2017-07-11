@@ -38,4 +38,3 @@ for i in range(1, 11):
     c = lotto_probility(n, m, ep)
     print "total: %s, wa: %s, eppect %s, try times: %s" % (n,m,ep, c)
 
-

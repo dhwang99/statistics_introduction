@@ -87,17 +87,31 @@ def gen_gauss_samples_byU(sample_count):
 '''
 使用均匀分布随机数，生成符合指数分布的随机数
 F(x) = 1 - exp(-1/beta*x)
-f(x) = 1/beta * exp(-x/beta), x>= 0
+x = -1/beta * 1/log(1 - F)     
 '''
 def gen_exp_samples_byU(sample_count, beta):
     sim_num = np.zeros(sample_count)
      
     for i in range(0, sample_count):
         u = np.random.uniform(0, 1)
-        x = standard_normal_dist.guess_x(u)
+        if u == 1:
+            x = 0.
+        else:
+            x = -1./beta * np.log(1. - u)
         sim_gauss_num[i] = x
 
     return sim_gauss_num
+
+
+'''
+pdf = 1/beta * exp(-x/beta)
+'''
+def gen_exp_distribute_pdf(sample_count, beta, max_x):
+    x = np.linspace(0, max_x, sample_count) 
+    y = map(lambda k:1/beta * np.exp(-k/beta), x)
+
+    return x,y
+
 
 
 #print num_has_gauss_dis
@@ -108,9 +122,9 @@ def gen_exp_samples_byU(sample_count, beta):
 #一般取总样本数开平方取上界. 上一个分组算法一般认为不合理
 #分得越细，和曲线偏差越大,但好看；分得粗，不好看
 sample_count = 1000
+group_count = int(np.sqrt(sample_count) + 0.9999) 
+
 sim_gauss_num = gen_gauss_samples_byU(sample_count)
-
-
 #绘制高斯采样的直方图
 plt_hist(sim_gauss_num, normed=True)
 
@@ -126,3 +140,15 @@ print "mean, std:", mean_val, std_val
 #plt_gauss_distribute(1, 2, 'k')
 
 plt.savefig('images/norm_distribute_gen_by_U.png', format='png')
+
+#指数分布相关
+plt.clf()
+sim_num = gen_exp_samples_byU(sample_count, 1)
+#绘制指数采样直方图
+plt.hist(sim_num, bins = group_count, normed=True)
+
+#绘制标准指数分布图
+exp_x, exp_y = gen_exp_distribute_pdf(sample_count, 1, np.max(sim_num))
+plt.plot(exp_x, exp_y, color='g')
+
+plt.savefig('images/norm_exp_gen_by_U.png', format='png')
