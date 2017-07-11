@@ -42,6 +42,7 @@ plt.savefig('images/random_dist.png', format='png')
 print "p: %s; exp_count:%s; match_ratio: %.3f" % (p, ec, ep)
 
 p = 0.03
+ec = 10000
 
 ep,rst = test_p(p, ec)
 print "p: %s; exp_count:%s; match_ratio: %.3f" % (p, ec, ep)
