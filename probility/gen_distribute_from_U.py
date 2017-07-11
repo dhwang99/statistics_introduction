@@ -18,7 +18,10 @@ import pdb
 
 import standard_normal_dist 
 
-#生成高斯分布的x及其对应的pdf(有限集合. 注意: y不是 CDF, 是pdf. X = Z*sigma + mu)
+'''
+根据标准正态分布表生成gauss分布。即：基于面积生成
+X = Z*sigma + mu
+'''
 def gen_gauss_distribute_pdf_from_dist_table(mu, sigma, color='bo'):
     nt = standard_normal_dist.normal_dist_table
     std_x = list(standard_normal_dist.normal_dist_table_x)
@@ -41,7 +44,7 @@ def gen_gauss_distribute_pdf_from_dist_table(mu, sigma, color='bo'):
     return gauss_x, gauss_y
 
 '''
-生成高斯分布的x及其对应的pdf(有限集合. 注意: y不是 CDF, 是pdf. X = Z*sigma + mu)
+生成高斯分布的x及其对应的pdf
 f = 1/(sqrt(2*pi) * sigma) * exp(-(x-mu)^2/(2*sigma^2))
 '''
 def gen_gauss_distribute_pdf(mu, sigma, sample_count, max_x):
