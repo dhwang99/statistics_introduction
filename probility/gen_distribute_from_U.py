@@ -19,7 +19,7 @@ import pdb
 import standard_normal_dist 
 
 #生成高斯分布的x及其对应的pdf(有限集合. 注意: y不是 CDF, 是pdf. X = Z*sigma + mu)
-def gen_gauss_distribute_pdf(mu, sigma, color='bo'):
+def gen_gauss_distribute_pdf_from_dist_table(mu, sigma, color='bo'):
     nt = standard_normal_dist.normal_dist_table
     std_x = list(standard_normal_dist.normal_dist_table_x)
     gauss_x = np.zeros(len(std_x))
@@ -37,6 +37,20 @@ def gen_gauss_distribute_pdf(mu, sigma, color='bo'):
         pre_p = p
         gauss_y[id] = y
         id += 1
+
+    return gauss_x, gauss_y
+
+'''
+生成高斯分布的x及其对应的pdf(有限集合. 注意: y不是 CDF, 是pdf. X = Z*sigma + mu)
+f = 1/(sqrt(2*pi) * sigma) * exp(-(x-mu)^2/(2*sigma^2))
+'''
+def gen_gauss_distribute_pdf(mu, sigma, sample_count, max_x):
+    gauss_x = np.linspace(-max_x, max_x, sample_count)
+    gauss_y = np.zeros(len(gauss_x))
+
+    for id in range(len(gauss_x)): 
+        x = gauss_x[id]
+        gauss_y[id] = 1/(np.sqrt(2 * np.pi) * sigma) * np.exp(-(x-mu)**2/(2*sigma**2))
 
     return gauss_x, gauss_y
 
@@ -129,7 +143,8 @@ sim_gauss_num = gen_gauss_samples_byU(sample_count)
 plt_hist(sim_gauss_num, normed=True)
 
 #绘制正态分布图
-gauss_x, gauss_y = gen_gauss_distribute_pdf(0, 1)
+dis = np.max(sim_gauss_num)
+gauss_x, gauss_y = gen_gauss_distribute_pdf(0, 1, sample_count, dis)
 plt.plot(gauss_x, gauss_y, color='g')
 
 mean_val = np.mean(sim_gauss_num)
