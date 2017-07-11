@@ -6,8 +6,8 @@
 
 >  包括从uniform生成符合正态分布、符合指数分布的随机数; 根据标准正态分布表汇制不同mu,sigma参数的正态分布图; 生成指数分布图；根据数据集合，生成直方图
 
->       code: [probility/gen_distribute_from_U.py](probility/gen_distribute_from_U.py)
->       image: [probility/images](probility/images)
+>       code: [gen_distribute_from_U.py](probility/gen_distribute_from_U.py)
+>       image: [images](probility/images)
 
 ####    2). 标准正态分布表
 >  主要转换了网上的标准正态分布表，并增加了根据x计算概率，和根据概率计算x的功能
