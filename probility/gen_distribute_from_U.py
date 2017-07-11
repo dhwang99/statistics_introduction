@@ -86,13 +86,15 @@ def plt_hist(a, color='r', normed=False):
 #使用均匀分布随机数，生成符合正态分布的随机数
 def gen_gauss_samples_byU(sample_count):
     sim_gauss_num = np.zeros(sample_count)
+    sim_u = np.zeros(sample_count)
     
     for i in range(0, sample_count):
         u = np.random.uniform(0, 1)
         x = standard_normal_dist.guess_x(u)
         sim_gauss_num[i] = x
+        sim_u[i] = u
 
-    return sim_gauss_num
+    return sim_u, sim_gauss_num
 
 '''
 使用均匀分布随机数，生成符合指数分布的随机数
@@ -101,6 +103,7 @@ x = -1/beta * 1/log(1 - F)
 '''
 def gen_exp_samples_byU(sample_count, beta):
     sim_num = np.zeros(sample_count)
+    sim_u = np.zeros(sample_count)
      
     for i in range(0, sample_count):
         u = np.random.uniform(0, 1)
@@ -108,9 +111,11 @@ def gen_exp_samples_byU(sample_count, beta):
             x = 0.
         else:
             x = -1./beta * np.log(1. - u)
+
+        sim_u[i] = u
         sim_gauss_num[i] = x
 
-    return sim_gauss_num
+    return sim_u, sim_gauss_num
 
 
 '''
@@ -128,13 +133,15 @@ def gen_exp_distribute_pdf(sample_count, beta, max_x):
 sample_count = 1000
 group_count = int(np.sqrt(sample_count) + 0.9999) 
 
-sim_gauss_num = gen_gauss_samples_byU(sample_count)
+sim_u, sim_gauss_num = gen_gauss_samples_byU(sample_count)
 mean_val = np.mean(sim_gauss_num)
 std_val = np.std(sim_gauss_num)
 print "mean, std:", mean_val, std_val
 
 #绘制高斯采样的直方图
 plt_hist(sim_gauss_num, normed=True)
+#叠加均匀分布采样直方图
+plt.hist((sim_u-0.5)*10, bins = group_count, normed=True, color='r', alpha=0.6)
 
 #叠加正态分布图
 gauss_x, gauss_y = gen_gauss_distribute_pdf(0, 1, sample_count, np.max(sim_gauss_num))
@@ -151,9 +158,11 @@ plt.savefig('images/norm_distribute.png', format='png')
 
 #指数分布相关
 plt.clf()
-sim_num = gen_exp_samples_byU(sample_count, 1)
+sim_u, sim_num = gen_exp_samples_byU(sample_count, 1)
 #绘制指数采样直方图
 plt.hist(sim_num, bins = group_count, normed=True)
+#叠加均匀分布采样直方图
+plt.hist(sim_u*10, bins = group_count, normed=True, color='r', alpha=0.6)
 
 #叠加标准指数分布图
 exp_x, exp_y = gen_exp_distribute_pdf(sample_count, 1, np.max(sim_num))
