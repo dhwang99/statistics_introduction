@@ -141,7 +141,7 @@ print "mean, std:", mean_val, std_val
 #绘制高斯采样的直方图
 plt_hist(sim_gauss_num, normed=True)
 #叠加均匀分布采样直方图
-plt.hist((sim_u-0.5)*10, bins = group_count, normed=True, color='r', alpha=0.6)
+plt.hist((sim_u-0.5)*8, bins = group_count, normed=True, color='r', alpha=0.6)
 
 #叠加正态分布图
 gauss_x, gauss_y = gen_gauss_distribute_pdf(0, 1, sample_count, np.max(sim_gauss_num))
@@ -162,7 +162,7 @@ sim_u, sim_num = gen_exp_samples_byU(sample_count, 1)
 #绘制指数采样直方图
 plt.hist(sim_num, bins = group_count, normed=True)
 #叠加均匀分布采样直方图
-plt.hist(sim_u*10, bins = group_count, normed=True, color='r', alpha=0.6)
+plt.hist(sim_u*8, bins = group_count, normed=True, color='r', alpha=0.6)
 
 #叠加标准指数分布图
 exp_x, exp_y = gen_exp_distribute_pdf(sample_count, 1, np.max(sim_num))
