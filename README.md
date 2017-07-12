@@ -2,25 +2,27 @@
 概率统计学入门。实现一些概率、采样、统计相关的算法
 
 ### 1. 概率入门的一些算法
-####    1). 不同分布随机数的生成。
+
+####    1). 均匀分布的伪随机数生成
+>   主要是两个算法：Mersenne_Twister(梅森旋转法), linear congruential(线性同余法). 算法来自网上.
+    里面有测试例子。从例子可以看出，相同的种子序列一样(这也是伪随机数)
+
+####    2). 不同分布随机数的生成
 
 >  包括从uniform生成符合正态分布、符合指数分布的随机数; 根据标准正态分布表汇制不同mu,sigma参数的正态分布图; 
     用pdf生成正态、指数分布图；根据采样数据集合，生成直方图
    备注下：用plt.bar生成柱状图时，需要 加条件:align='edge', 默认取 middle
 
->   code:[gen_distribute_from_U.py](probility/gen_distribute_from_U.py)
+>   code:[probility/gen_distribute_from_U.py](probility/gen_distribute_from_U.py)
 
->   images:[images](probility/images)
+>   images:[probility/images](probility/images)
 
-####    2). 标准正态分布表
->  主要转换了网上的标准正态分布表，并增加了算标准的Fx, Fx<sup>-1</sup>的功能
+####    3). 标准正态分布表
+>  主要转换了网上的标准正态分布表，并增加了算标准的F<sub>x</sub>, F<sub>X</sub><sup>-1</sup>的功能
 
 >   [probility/standard_normal_dist.py](probility/standard_normal_dist.py)
 
-####    3). 均匀分布的伪随机数生成
->   主要是两个算法：Mersenne_Twister, linear congruential. 算法来自网上
-
->   [probility/random_number_has_U.py](probility/random_number_has_U.py)
+>   [probility/gen_random_number.py](probility/gen_random_number.py)
 
 ####    4). 均匀分布随机数测试概率分布
 >   p=0.3 时，随试验次数增加，基本稳定在0.3 +- 0.005 左右; p=0.03时，随试验次数增加，偏差还是比较大 0.03 +- 0.005;

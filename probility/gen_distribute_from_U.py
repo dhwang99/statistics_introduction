@@ -157,6 +157,10 @@ plt.clf()
 gauss_x2, gauss_y2 = gen_gauss_distribute_pdf_from_dist_table(0, 1)
 plt.plot(gauss_x, gauss_y, 'g-.')
 plt.plot(gauss_x2, gauss_y2, 'r--')
+gauss_x2, gauss_y2 = gen_gauss_distribute_pdf_from_dist_table(0, 2)
+plt.plot(gauss_x2, gauss_y2, 'b-')
+gauss_x2, gauss_y2 = gen_gauss_distribute_pdf_from_dist_table(0, 4)
+plt.plot(gauss_x2, gauss_y2, 'y-')
 plt.savefig('images/norm_distribute.png', format='png')
 
 #指数分布相关

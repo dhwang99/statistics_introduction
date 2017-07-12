@@ -11,7 +11,6 @@ normal_dist_table = None
 normal_dist_table_x = None
 normal_dist_table_p = None
 
-
 def load_from_json(jfile=normal_dist_json_file_name):
     global normal_dist_table_p, normal_dist_table_x, normal_dist_table
 
