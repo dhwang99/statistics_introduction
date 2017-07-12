@@ -66,4 +66,5 @@ print "p: %s; exp_count:%s; match_ratio: %.3f" % (p, ec, ep)
 
 plt.clf()
 plt.plot(rst, 'bo')
+
 plt.savefig('images/random_dist003_3.png', format='png')
