@@ -10,8 +10,10 @@
 ####    2). 不同分布随机数的生成
 
 >  包括从uniform生成符合正态分布、符合指数分布的随机数; 根据标准正态分布表汇制不同mu,sigma参数的正态分布图; 
-    用pdf生成正态、指数分布图；根据采样数据集合，生成直方图
-   备注下：用plt.bar生成柱状图时，需要 加条件:align='edge', 默认取 middle
+
+>   用pdf生成正态、指数分布图；根据采样数据集合，生成直方图
+
+>   备注下：用plt.bar生成柱状图时，需要 加条件:align='edge', 默认取 middle
 
 >   code:[probility/gen_distribute_from_U.py](probility/gen_distribute_from_U.py)
 
@@ -26,7 +28,8 @@
 
 ####    4). 均匀分布随机数测试概率分布
 >   p=0.3 时，随试验次数增加，基本稳定在0.3 +- 0.005 左右; p=0.03时，随试验次数增加，偏差还是比较大 0.03 +- 0.005;
-    即：概率越小，偏差越大；但随试验次数增加，偏差在减小。如(1000, 10000, 100000) (random_dist003.png, random_dist002,random_dist001)
+
+>    即：概率越小，偏差越大；但随试验次数增加，偏差在减小。如(1000, 10000, 100000) (random_dist003.png, random_dist002,random_dist001)
 
 >   code: [probility/test_p.py](probility/test_p.py)
 
