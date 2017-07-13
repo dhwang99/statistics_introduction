@@ -40,6 +40,8 @@
 
 >   b. 计算乐透中奖率 > 0.5时，所需彩票数. (不放回抽样)
 
->   c. ...
+>   c. 计算 sim(x) = (1+1/x)^x 与 np.e的偏差。从试验结果看，x = 50时，相关就在1%以内了 
+
+>   d. ...
 
 >   [probility/small_tips.py](probility/small_tips.py)
