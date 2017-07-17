@@ -3,13 +3,17 @@
 '''
 用 uniform(0,1)测试样本分布
 
-Xn_bar = sum(Xi) * /n
+X_bar = sum(Xi) * /n
 
-E(Xn_bar) = mu
-V(Xn_bar) = V(X)/n
+E(X_bar) = mu. 即X_bar均值的期望是总体的均值
+V(X_bar) = V(X)/n. X_bar 的方差为总体方差/n
 S2 = sum(Xi-X_bar)^2/(n-1)
 
+V(S2)是多少？也是 var(X)/(n-1)? 画了个图。但没有理论
+
 留个问题：采样10000次，和采样100次，每次采100个样例，算出来的均值和方差，哪个方法更好？还是这种方法本身就有问题
+
+1. 从结果看，X_bar 的方差和确实和 var(X)/n接近
 '''
 
 import matplotlib.pyplot as plt
@@ -36,9 +40,11 @@ if __name__ == "__main__":
     sample_count = 100
 
     x_bar_means = []
-    x_bar_mean_vars = []
     x_bar_mu_theorem = []
+    x_bar_vars = []
     x_bar_vars_theorem = []
+
+    x_s2_vars = []
     test_nums = range(1, 101)
     for n in test_nums:
         x_bar_samples = []
@@ -53,14 +59,19 @@ if __name__ == "__main__":
         x_bar_mean = np.mean(x_bar_samples)
         #求x_bar的方差
         v = x_bar_samples - np.ones(sample_count) * x_bar_mean
-        x_bar_mean_var = np.dot(v, v) / (sample_count-1) 
-        pdb.set_trace()
+        x_bar_var = np.dot(v, v) / (sample_count-1)  #x_bar的样本方差, 其1/(n-1)是总体方差的无偏估计
+        #求S2的方差
+        v = x_bar_s2 - np.mean(x_bar_s2) * x_bar_mean
+        s2_var = np.dot(v, v)/(sample_count - 1)
+        #pdb.set_trace()
         v = np.var(x_bar_samples)
 
         x_bar_means.append(x_bar_mean)
         x_bar_mu_theorem.append(M_X)
-        x_bar_mean_vars.append(x_bar_mean_var)
+        x_bar_vars.append(x_bar_var)
         x_bar_vars_theorem.append(V_X/n)
+
+        x_s2_vars.append(s2_var)
    
     imgdir = 'images/sample_distribution'
     plt.clf()
@@ -69,9 +80,14 @@ if __name__ == "__main__":
     plt.savefig(imgdir + '/x_bar_means.png', format='png')
     
     plt.clf()
-    plt.plot(test_nums, x_bar_mean_vars, color='b')
+    plt.plot(test_nums, x_bar_vars, color='b')
     plt.plot(test_nums, x_bar_vars_theorem, color='r')
     plt.savefig(imgdir + '/x_bar_vars.png', format='png')
+    
+    plt.clf()
+    plt.plot(test_nums, x_s2_vars, color='b')
+    #plt.plot(test_nums, x_bar_vars_theorem, color='r')
+    plt.savefig(imgdir + '/x_s2_vars.png', format='png')
     
     sample_ids = range(1, sample_count + 1)
     for n in nlist:
