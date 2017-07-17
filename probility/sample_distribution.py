@@ -52,15 +52,17 @@ if __name__ == "__main__":
         #计算x_bar的均值
         x_bar_mean = np.mean(x_bar_samples)
         #求x_bar的方差
-        v = x_bar_samples - np.ones(sample_count) * M_X
-        x_bar_mean_var = np.dot(v, v) / sample_count
+        v = x_bar_samples - np.ones(sample_count) * x_bar_mean
+        x_bar_mean_var = np.dot(v, v) / (sample_count-1) 
+        pdb.set_trace()
+        v = np.var(x_bar_samples)
 
         x_bar_means.append(x_bar_mean)
         x_bar_mu_theorem.append(M_X)
         x_bar_mean_vars.append(x_bar_mean_var)
         x_bar_vars_theorem.append(V_X/n)
    
-    imgdir = 'images/sample_distribution' 
+    imgdir = 'images/sample_distribution'
     plt.clf()
     plt.plot(test_nums, x_bar_means, color='b')
     plt.plot(test_nums, x_bar_mu_theorem, color='r')
@@ -70,7 +72,6 @@ if __name__ == "__main__":
     plt.plot(test_nums, x_bar_mean_vars, color='b')
     plt.plot(test_nums, x_bar_vars_theorem, color='r')
     plt.savefig(imgdir + '/x_bar_vars.png', format='png')
-
     
     sample_ids = range(1, sample_count + 1)
     for n in nlist:
@@ -86,4 +87,3 @@ if __name__ == "__main__":
         plt.plot(sample_ids, x_bar_samples, color='b')
         plt.plot(sample_ids, x_bar_mu_theorem[:len(sample_ids)], color='b')
         plt.savefig(fname, format='png')
-
