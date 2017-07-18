@@ -89,7 +89,6 @@ def plot_random_walk(n, p, last_steps, repeat_times):
 
     plt.savefig('images/random_walk/laststep_%s_p%s.png' % (last_steps, p), format='png')
 
-
 if __name__ == "__main__":
     for i in range(1,6):
         plot_random_walk(10000, 0.1 * i, 10000,  5)

@@ -97,7 +97,7 @@ if __name__ == "__main__":
             x_bar, s2 = gen_Xbar_sample_byU(n)
             x_bar_samples.append(x_bar)
             x_bar_s2.append(s2)
-        
+         
         fname = imgdir + "/x_bar_sample_n%s.png" % (n)
         plt.clf()
         plt.plot(sample_ids, x_bar_samples, color='b')
