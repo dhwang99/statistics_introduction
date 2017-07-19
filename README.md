@@ -34,13 +34,45 @@
 >   code: [probility/test_p.py](probility/test_p.py)
 
 >   image: [probility/images](probility/images)
+
+####    5). 随机游走
+>   从例子看，走n步后，观测值与期望相差变化还是比较明显。
+
+>   试验了5次，分别取p=0.1, 0.2, 0.3, 0.4, 0.5, 绘制了全部步数、最后100步中 期望值、观测值、方差。从图上直观的得到上述结论
+
+>   code:[probility/random_walk.py](probility/random_walk.py)
+
+>   image:[probility/images/random_walk](probility/images/random_walk)
+
+####    6). 样本分布
+>   Y=sum(Xi). Xi比较大的情况下，Xi的均值、S2是X的期望和方差的无偏估计(和真实值的期望相等), 且估计的方差为 V(X)/n
+
+>   代码中以X~U(0,1)模拟生成Xn的样本, 然后求Xn的均值、方差，并绘制观测值与真实分布的期望/方差的对比图
+
+>   code:[probility/sample_distribution.py](probility/sample_distribution.py)
+
+>   image:[probility/images/sample_distribution](probility/images/sample_distribution)
+
+####    6). 概率不等式
+>   测试了两个概率不等式： markov, chebyshev。 其它的参考笔记吧
+
+>   [probility/test_inequality.py](probility/test_inequality.py)
+
+####    7). Poisson vs Binomial分布对比
+>   取 p: 0.05 ~ 0.95, n:10 ~ 100, m: 0 ~9, 来测试possion分布和Binomial分布计算的误差。结果看出来，当p比较少时，两者差别不明显
+
+>   此外，从结果也可以看出，分布还是围绕 期望分布, 在期望附近，pmf高于其它
+
+>   [probility/test_inequality.py](probility/test_inequality.py)
+
  
-####    5). 一些有意思的小程序
+####    x). 一些有意思的小程序
 >   a. 计算乐透中奖的概率.
 
 >   b. 计算乐透中奖率 > 0.5时，所需彩票数. (不放回抽样)
 
->   c. 计算 sim(x) = (1+1/x)^x 与 np.e的偏差。从试验结果看，x = 50时，相关就在1%以内了 
+>   c. 计算 sim(x) = (1+1/x)^x 与 np.e的偏差。从试验结果看，x = 50时，相关就在1%以内了. 这也意味着，对possion分布而言，
+       (1 - p)^n 
 
 >   d. ...
 
