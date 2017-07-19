@@ -63,7 +63,8 @@
 
 >   此外，从结果也可以看出，分布还是围绕 期望分布, 在期望附近，pmf高于其它
 
->   [probility/test_inequality.py](probility/test_inequality.py)
+>  [probility/test_poisson_VS_binomial.py](probility/test_poisson_VS_binomial.py)
+
 
  
 ####    x). 一些有意思的小程序
