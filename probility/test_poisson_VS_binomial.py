@@ -53,9 +53,11 @@ if __name__ == "__main__":
     p_b1 = get_Binomial(p, 1, 10)
     p_b5 = get_Binomial(p, 5, 10)
     p_b10 = get_Binomial(p, 10, 10)
-
-    print "poisson:", p_p1, p_p5, p_p10
-    print "Binomial:", p_b1, p_b5, p_b10
+    
+    format_str = ' '.join(['%.4f']*6)
+    print "poisson:  " + format_str % (p_p1[0], p_p1[1], p_p5[0], p_p5[1], p_p10[0], p_p1[1])
+    print "Binomial: " + format_str % (p_b1[0], p_b1[1], p_b5[0], p_b5[1], p_b10[0], p_b1[1])
+    print ""
     
     for p in p_list:
         for n in n_list:
@@ -65,10 +67,9 @@ if __name__ == "__main__":
                 CDF_p, pdf_p = get_poisson(lmb, m)
                 CDF_b, pdf_b = get_Binomial(p, m, n)
 
-                rst_list.append((p, n, m, CDF_p, pdf_p, CDF_b, pdf_b, CDF_p-CDF_b, pdf_p-pdf_b))
+                rst_list.append((p, n, m, CDF_p, CDF_b, CDF_p-CDF_b, pdf_p, pdf_b, pdf_p-pdf_b))
             
             format_str = 'p=%s n=%s m=%s : ' + ' '.join(['%.4f']*6)
             rst_str = '  \n'.join(map(lambda x:format_str%x, rst_list))
             print rst_str
             print ''
-
