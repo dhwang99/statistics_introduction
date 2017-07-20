@@ -12,11 +12,11 @@ uniform不能通过极大似然求解。pdf: f(x) = 1/(b - a), 没有x参数
 '''
 
 '''
-1. likelyhood function: 
+1. likelihood function: 
    f(x; theta) = 1/theta*exp(-x/theta), x>0
    L(x; theta) = PI(f)
 
-2. log likelyhood function:
+2. log likelihood function:
    log f = -log(theta) - x/theta
    l(x;theta) = sum(log f(xi; theta)) = -n * log(theta) - sum(xi)/theta 
 
@@ -85,14 +85,14 @@ if __name__ == "__main__":
     test_count = 10
     sample_count = 500
 
-    print 'maxminum likelyhood for exp distribute samples:'
+    print 'maximum likelihood for exp distribute samples:'
     ML_test(test_count, ML_for_Exp, sample_count, 5)
 
     print ''
-    print 'maxminum likelyhood for Bernolli distribute samples:'
+    print 'maximum likelihood for Bernolli distribute samples:'
     ML_test(test_count, ML_for_Bernolli, sample_count, 0.2)
     
     print ''
-    print 'maxminum likelyhood for Normal distribute samples:'
+    print 'maximum likelihood for Normal distribute samples:'
     ML_test(test_count, ML_for_Norm, sample_count, 2, 3)
     

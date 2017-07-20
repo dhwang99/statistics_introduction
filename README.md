@@ -87,7 +87,7 @@
 
 ## 1. 统计推断入门的一些算法
 
-####  1). maxminum_likelihood
+####  1). maximum_likelihood
 >    用最大似然估计指数、正态、贝努利分布的参数（正态只估计了位置参数）
 
->    code:[estimate/maxminum_likelihood.py](maxminum_likelihood.py)
+>    code:[estimate/maximum_likelihood.py](maximum_likelihood.py)
