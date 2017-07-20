@@ -66,6 +66,12 @@
 >  [probility/test_poisson_VS_binomial.py](probility/test_poisson_VS_binomial.py)
 
 
+####  8) 概率收敛性测试
+>   主要写了两个收敛性的测试：大数定律、中心极限定理。参考见代码和图
+
+>   code:[probility/test_convergence.py](probility/test_convergence.py)
+
+>   image:[probility/images/convergence](probility/images/convergence)
  
 ####    x). 一些有意思的小程序
 >   a. 计算乐透中奖的概率.

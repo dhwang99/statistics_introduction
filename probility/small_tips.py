@@ -63,3 +63,4 @@ if __name__ == "__main__":
 
 plt.plot(x, y, color='g')
 plt.savefig('images/1divx_error.png', format='png')
+
