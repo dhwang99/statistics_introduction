@@ -15,6 +15,16 @@ def distribute_funU():
 
     return mu, var, f
 
+def distribute_funBinomial():
+    n = 10
+    p = .3    #更符合正态分布一些。取0.1之类的，就用 poisson之类的来模拟吧
+    mu = n*p
+    var = n* p*(1-p)
+    def f():
+        return np.random.binomial(n, p, 1)
+
+    return mu, var, f
+
 '''
 f(x; beta) = 1/beta*exp(-x/beta)
 F(x; beta) = 1 - exp(-x/beta) , x>0
@@ -128,13 +138,21 @@ def test_CLT(n, dis_f, normed, color):
     return None
 
 if __name__ == "__main__":
+    print "test WLLN for uniform sample:"
     for i in xrange(20):
         test_WLLN(100, distribute_funU)
 
     print "\n"
 
+    print "test WLLN for Exp sample:"
     for i in xrange(20):
         test_WLLN(100, distribute_funExp)
+
+    print "\n"
+    print "test WLLN for binomial sample:"
+
+    for i in xrange(20):
+        test_WLLN(100, distribute_funBinomial)
 
     colors = ['k', 'g', 'y', 'b', 'r', 'm', 'y']
     plt.clf()
@@ -158,6 +176,15 @@ if __name__ == "__main__":
     plt.savefig('images/convergence/convergence_exp.png', format='png')
 
     plt.clf()
+    id = 0
+    for i in n_list:
+        color = colors[id % len(colors)]
+        test_CLT(i, distribute_funBinomial, normed = normed, color=color)
+        id += 1
+
+    plt.savefig('images/convergence/convergence_binomial.png', format='png')
+
+    plt.clf()
     normed = True 
     id = 0
     for i in n_list:
@@ -175,3 +202,21 @@ if __name__ == "__main__":
         id += 1
 
     plt.savefig('images/convergence/convergence_exp_normed.png', format='png')
+
+    plt.clf()
+    id = 0
+    for i in n_list:
+        color = colors[id % len(colors)]
+        test_CLT(i, distribute_funExp, normed = normed, color=color)
+        id += 1
+
+    plt.savefig('images/convergence/convergence_exp_normed.png', format='png')
+
+    plt.clf()
+    id = 0
+    for i in n_list:
+        color = colors[id % len(colors)]
+        test_CLT(i, distribute_funBinomial, normed = normed, color=color)
+        id += 1
+
+    plt.savefig('images/convergence/convergence_binomial_normed.png', format='png')
