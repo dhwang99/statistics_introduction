@@ -7,12 +7,13 @@
 >   主要是两个算法：Mersenne_Twister(梅森旋转法), linear congruential(线性同余法). 算法来自网上.
     里面有测试例子。从例子可以看出，相同的种子序列一样(这也是伪随机数)
 
+>   [probility/gen_random_number.py](probility/gen_random_number.py)
+
 ####    2). 标准正态分布表
 >  主要转换了网上的标准正态分布表，并增加了算标准的F<sub>x</sub>, F<sub>X</sub><sup>-1</sup>的功能
 
 >   [probility/standard_normal_dist.py](probility/standard_normal_dist.py)
 
->   [probility/gen_random_number.py](probility/gen_random_number.py)
 
 ####    3). 不同分布随机数的生成
 
@@ -26,7 +27,8 @@
 
 >   images:[probility/images](probility/images)
 
-####    4). 均匀分布生成的随机数频率分布
+####    4). 均匀分布随机数的频率分布
+
 >   p=0.3 时，随试验次数增加，基本稳定在0.3 +- 0.005 左右; p=0.03时，随试验次数增加，偏差还是比较大 0.03 +- 0.005;
 
 >    即：概率越小，偏差越大；但随试验次数增加，偏差在减小。如(1000, 10000, 100000) (random_dist003.png, random_dist002,random_dist001)
@@ -85,7 +87,7 @@
 
 >   [probility/small_tips.py](probility/small_tips.py)
 
-## 1. 统计推断入门的一些算法
+## 2. 统计推断入门的一些算法
 
 ####  1). maximum_likelihood
 >    用最大似然估计指数、正态、贝努利分布的参数（正态只估计了位置参数）

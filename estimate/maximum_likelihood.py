@@ -22,7 +22,7 @@ uniform不能通过极大似然求解。pdf: f(x) = 1/(b - a), 没有x参数
 
    logx, 1/x都是凹函数， 则上述函数为凸函数，可以求上式最大值
 
-3. solve:
+3. deriv:
    l(x;theta) = -n/theta + sum(xi)/theta^2 = 0
 
    theta = sum(xi)/n
@@ -88,11 +88,9 @@ if __name__ == "__main__":
     print 'maximum likelihood for exp distribute samples:'
     ML_test(test_count, ML_for_Exp, sample_count, 5)
 
-    print ''
-    print 'maximum likelihood for Bernolli distribute samples:'
+    print '\nmaximum likelihood for Bernolli distribute samples:'
     ML_test(test_count, ML_for_Bernolli, sample_count, 0.2)
     
-    print ''
-    print 'maximum likelihood for Normal distribute samples:'
+    print '\nmaximum likelihood for Normal distribute samples:'
     ML_test(test_count, ML_for_Norm, sample_count, 2, 3)
     
