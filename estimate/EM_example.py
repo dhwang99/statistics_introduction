@@ -68,7 +68,10 @@ L = sum_n sum_k p(xi, zk) = sum_n sum_k alpha_k * phi(x_i|mu_k, sigma_k^2)
 gamma(i,k) = p(zk|xi) = p(xi, zk)/p(xi)
 '''
 
-def EM_1(samples):
+'''
+EM求解 Gaussian Mixture Model
+'''
+def EM_for_GMM(samples): 
     alpha = 0.5
     mu1 = 1.7
     sigma1 = 0.2  #标准差小点
@@ -130,7 +133,7 @@ def EM_1(samples):
 if __name__ == "__main__":
     init_param = (0.4, 1.7, 0.2, 1.5, 0.25)    #这一组非常不好区分。两个分布的重合度非常高，导致算不准
     init_param = (0.4, 1.75, 0.1, 1.5, 0.15)
-    init_param = [0.4, 1.85, 0.1, 1.4, 0.15]
+    init_param = [0.4, 1.85, 0.1, 1.4, 0.15]   #这一组比较好处理
     n = 2000
     samples = gen_samples(n, init_param) 
 
