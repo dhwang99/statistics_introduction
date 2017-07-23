@@ -137,7 +137,7 @@ if __name__ == "__main__":
     n = 2000
     samples = gen_samples(n, init_param) 
 
-    rst = EM_1(samples)
+    rst = EM_for_GMM(samples)
 
     print "init param:", init_param
     print rst
