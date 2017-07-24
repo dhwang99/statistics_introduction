@@ -6,8 +6,10 @@ EM求解混合高斯模型
 求：男女身高分布参数，男女比例参数(p)
 
 留下的问题：
-1. 方差参数估计
-2. 随机取样方法
+1. 初始参数预估。现在给的是一个人工猜的方法
+2. 随机取样方法。
+3. 多元正态分布的计算, 样本都是一元正态的（学生身高)
+这些回头补一补
 '''
 
 import numpy as np
@@ -23,18 +25,19 @@ def pdf_for_norm(xi, mu, sigma):
 
 '''
 混合正态分布的pdf
+param: list for elements: (pi, mu_i, sigma_i), sum(pi) = 1 
 '''
-def pdf_for_mix_norm(xi, param):
-    p1, mu1, sigma1, mu2, sigma2 = param
-    pdf1 = pdf_for_norm(xi, mu1, sigma1)
-    pdf2 = pdf_for_norm(xi, mu2, sigma2)
-
-    pdf = p1 * pdf1 + (1. - p1) * pdf2 
+def pdf_for_mix_norm(xi, params):
+    pdf = 0.
+    for param_i in params:
+        p_i, mu_i, sigma_i = param_i
+        pdf_i = pdf_for_norm(xi, mu_i, sigma_i)
+        pdf += p_i * pdf_i
 
     return pdf
 
 '''
-bounds like (1.5, 1.8)
+bounds like (0.0, 3.0)
 '''
 def plot_mix_norm_distribute(param, bounds, color = 'k'):
     bins = np.linspace(bounds[0], bounds[1], 100) 
@@ -43,113 +46,101 @@ def plot_mix_norm_distribute(param, bounds, color = 'k'):
 
 
 '''
-p为男学生的概率，采样为二项式分布(逐个(0, 1)分布)
+如果只有男女学生，则p为男学生的概率，采样为二项式分布(逐个(0, 1)分布)
+为了兼容多个分组，本示例用的是多项式分布
 '''
-def gen_samples(n, param):
+def gen_samples(n, params):
     #n1, 为男学生的采样数
-    p1, mu1, sigma1, mu2, sigma2 = param
-    n1 = np.random.binomial(n, p1, 1)[0]
-   
-    #生成男学生的样本, 符合mu1, sigma1^2 的高斯分布
-    sample1 = np.random.normal(mu1, sigma1, n1)
-    #生成女学生的样本
-    sample2 = np.random.normal(mu2, sigma2, n-n1)
+    pvals = []
+    for param_i in params:
+        p_i, mu_i, sigma_i = param_i
+        pvals.append(p_i)
 
-    return np.hstack((sample1, sample2))
+    sample_counts = np.random.multinomial(n, pvals, 1)[0]
+    samples = []
+    i = 0
+    for i in xrange(len(params)):
+        p_i, mu_i, sigma_i = params[i]
+        #生成学生的样本, 符合mu1, sigma1^2 的高斯分布
+        sample_i = np.random.normal(mu_i, sigma_i, sample_counts[i])
+        samples.append(sample_i)
 
+    return np.hstack(samples)
 
-
-'''
-简化版的算法
-重要的概念是, 对xi, 求其属于k的比例
-p(xi,zk) = p(xi|zk)*p(zk) = alpha_k * phi(x_i|mu_k, sigma_k^2)
-L = sum_n sum_k p(xi, zk) = sum_n sum_k alpha_k * phi(x_i|mu_k, sigma_k^2)
-
-gamma(i,k) = p(zk|xi) = p(xi, zk)/p(xi)
-'''
 
 '''
 EM求解 Gaussian Mixture Model
+
+p(xi,zk) = p(xi|zk)*p(zk) = phi(x_i|mu_k, sigma_k^2) * psi_k
+
+w(i,k) = p(zk|xi) = p(xi, zk)/p(xi)
+
+l = sum_n sum_k p(xi, zk) = sum_n(sum_k(w(zk,xi) * log(p(xi, zk)/w(zk,xi))))
 '''
-def EM_for_GMM(samples): 
-    alpha = 0.5
-    mu1 = 1.7
-    sigma1 = 0.2  #标准差小点
-    mu2 = 1.5
-    sigma2 = 0.2  #小短腿、大长腿比例要高一些
-    k = 2          #隐变量分类数
-   
-    N = len(samples)
+def EM_for_GMM(samples, init_params): 
+    m = len(samples)
+    k = len(init_params)
+    params = np.copy(init_params)
+
     loop_count = 100
-    l = 0
-    while l < loop_count:
-        l+=1
+    x = samples
+
+    for l in xrange(loop_count):
+        w_a = np.zeros((m, k))
         #E step
-        N_1 = N_2 = 0.
+        for i in xrange(m):
+            xi = x[i]
+            p_xi = pdf_for_mix_norm(xi, params) 
+            for j in xrange(k):
+                psi_j, mu_j, sigma_j = params[j]
+                p_xi_given_yk = pdf_for_norm(xi, mu_j, sigma_j)  #N(xi;mu_j, sigma_j) 
+                p_xi_yj = p_xi_given_yk * psi_j   # p(xi,yj) = p(xi|yj)*p(yj) 
+                w_a[i,j] = p_xi_yj / p_xi         # p(yj|xi) = p(xi,yj)/p(xi) 
 
-        x_k1 = np.zeros(N)
-        x_k2 = np.zeros(N)
+        #M step, 可考虑改为矩阵计算方法
+        for j in xrange(k):
+            Nj = np.sum(w_a[:, j], 0)
+            mu_j = np.sum(w_a[:, j] * samples) / Nj
+            sigma2_j = np.sum(np.dot((w_a[:,j] * (x - mu_j)), (x - mu_j))) / Nj
 
-        gamma_k1 = np.zeros(N)
-        gamma_k2 = np.zeros(N)
-        for i in xrange(N):
-            xi = samples[i]
-            # calcuate p(xi, zk), Z,X独立
-            p_xz_i1 = alpha * pdf_for_norm(xi, mu1, sigma1)
-            p_xz_i2 = (1.-alpha) * pdf_for_norm(xi, mu2, sigma2)
-            #p(xi) = p(xi,z1) + p(xi, z2)
-            p_xi = p_xz_i1 + p_xz_i2 
-            # p(zk|xi)
-            p_z1_xi = p_xz_i1 / p_xi
-            p_z2_xi = p_xz_i2 / p_xi 
+            params[j,:] = np.array([Nj/m, mu_j, np.sqrt(sigma2_j)])
 
-            N_1 += p_z1_xi
-            N_2 += p_z2_xi
+    return params
 
-            x_k1[i] = p_z1_xi * xi
-            x_k2[i] = p_z2_xi * xi
+def test_mix_norm_model(m):
+    sample_params = np.array([[0.4, 1.7,  0.2], [0.6, 1.5, 0.25]])    #这一组非常不好区分。两个分布的重合度非常高，导致算不准
+    sample_params = np.array([[0.4, 1.75, 0.1], [0.6, 1.5, 0.15]])    
+    sample_params = np.array([[0.4, 1.85, 0.1], [0.6, 1.4, 0.15]])   #这一组比较好处理
 
-            gamma_k1[i] = p_z1_xi
-            gamma_k2[i] = p_z2_xi
+    samples = gen_samples(m, sample_params) 
+    
+    #生成初始参数
+    rd = np.random.rand(sample_params.shape[0], sample_params.shape[1]) - 0.5
+    init_params = sample_params * (1 - rd * 0.1)
+    init_params[:,0] = 1./len(init_params)
 
-        mu_es1 = x_k1.sum() / N_1   #注意不是 除以N, 是除以N_1, 下同
-        mu_es2 = x_k2.sum() / N_2
+    sim_rst = EM_for_GMM(samples, init_params)
 
-        # sigma_es1 = x_k1.var(), sigma_es2 = x_k2.var(), 这个是错的。同上
-        # 求sigma 这一块有疑问
-        sigma_es1 = np.dot(gamma_k1 * (samples - mu_es1), (samples - mu_es1).T) / N_1
-        sigma_es2 = np.dot(gamma_k2 * (samples - mu_es2), (samples - mu_es2).T) / N_2
-        alpha_es = N_1 / N
-        #pdb.set_trace()
+    print "for  Sample count:", m
+    print "Sample param:\n", sample_params
+    print "init param:\n", init_params
+    print "EM result:\n", sim_rst
+    print ""
 
-        mu1 = mu_es1
-        mu2 = mu_es2
-        sigma1 = np.sqrt(sigma_es1)
-        sigma2 = np.sqrt(sigma_es2)
-        alpha = alpha_es
+    bounds = (0.5, 2.5)
+    plt.clf()
+    plot_mix_norm_distribute(sample_params, bounds, color='r')
+    plot_mix_norm_distribute(init_params, bounds, color='b')
+    plot_mix_norm_distribute(sim_rst, bounds, color='k')
 
-    return alpha, mu1, sigma1, mu2, sigma2
+    test_p1 = init_params
+    test_p1[:, 0] = [0,1]
+    plot_mix_norm_distribute(test_p1, bounds, color='y')
+    test_p1[:, 0] = [1,0]
+    plot_mix_norm_distribute(test_p1, bounds, color='c')
+    plt.savefig('images/mix_norm/mix_norm_distibute_%s.png' % m, format='png')
 
 if __name__ == "__main__":
-    init_param = (0.4, 1.7, 0.2, 1.5, 0.25)    #这一组非常不好区分。两个分布的重合度非常高，导致算不准
-    init_param = (0.4, 1.75, 0.1, 1.5, 0.15)
-    init_param = [0.4, 1.85, 0.1, 1.4, 0.15]   #这一组比较好处理
-    n = 2000
-    samples = gen_samples(n, init_param) 
-
-    rst = EM_for_GMM(samples)
-
-    print "init param:", init_param
-    print rst
-
-    bounds = (1.1, 2.1)
-    plt.clf()
-    plot_mix_norm_distribute(init_param, bounds, color='r')
-    plot_mix_norm_distribute(rst, bounds, color='b')
-
-    test_p1 = list(init_param)
-    test_p1[0] = 0
-    plot_mix_norm_distribute(test_p1, bounds, color='y')
-    test_p1[0] = 1
-    plot_mix_norm_distribute(test_p1, bounds, color='c')
-    plt.savefig('images/mix_norm/distibute.png', format='png')
+    mlist = [ 200,500, 1000, 2000, 5000]
+    for m in mlist:
+        test_mix_norm_model(m)
