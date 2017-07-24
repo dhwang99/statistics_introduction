@@ -91,5 +91,13 @@
 
 ####  1). maximum_likelihood
 >    用最大似然估计指数、正态、贝努利分布的参数（正态只估计了位置参数）
+>    极大似然估计是求极大值的算法，也可以用数值方法求解：如牛顿法、梯度法、A_star算法等等
 
 >    code:[estimate/maximum_likelihood.py](maximum_likelihood.py)
+
+####  2). EM求解GMM问题 
+>   用EM算法估计学生身高分布中，学生比例（多项式分布）参数、身高分布（正态分布）参数。
+>   从试验中可以看出，如果两个正态分布的mu差别较大，估计出来的值会准一些；此外，样本适当多点
+
+>    code:[estimate/EM_example.py](EM_example.py)
+>   image:[estimate/images/mix_norm](estimate/images/mix_norm)
