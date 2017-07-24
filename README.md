@@ -99,5 +99,5 @@
 >   用EM算法估计学生身高分布中，学生比例（多项式分布）参数、身高分布（正态分布）参数。
 >   从试验中可以看出，如果两个正态分布的mu差别较大，估计出来的值会准一些；此外，样本适当多点
 
->    code:[estimate/EM_example.py](EM_example.py)
+>    code:[estimate/EM_for_GMM.py](EM_for_GMM.py)
 >   image:[estimate/images/mix_norm](estimate/images/mix_norm)
