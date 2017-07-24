@@ -133,11 +133,13 @@ def test_mix_norm_model(m):
     plot_mix_norm_distribute(init_params, bounds, color='b')
     plot_mix_norm_distribute(sim_rst, bounds, color='k')
 
+    '''
     test_p1 = init_params
     test_p1[:, 0] = [0,1]
     plot_mix_norm_distribute(test_p1, bounds, color='y')
     test_p1[:, 0] = [1,0]
     plot_mix_norm_distribute(test_p1, bounds, color='c')
+    '''
     plt.savefig('images/mix_norm/mix_norm_distibute_%s.png' % m, format='png')
 
 if __name__ == "__main__":
