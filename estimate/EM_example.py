@@ -46,22 +46,16 @@ def plot_mix_norm_distribute(param, bounds, color = 'k'):
 
 
 '''
-如果只有男女学生，则p为男学生的概率，采样为二项式分布(逐个(0, 1)分布)
+如果只有男女学生，采样为二项式分布(逐个(0, 1)分布)
 为了兼容多个分组，本示例用的是多项式分布
 '''
 def gen_samples(n, params):
-    #n1, 为男学生的采样数
-    pvals = []
-    for param_i in params:
-        p_i, mu_i, sigma_i = param_i
-        pvals.append(p_i)
-
-    sample_counts = np.random.multinomial(n, pvals, 1)[0]
+    sample_counts = np.random.multinomial(n, params[:, 0], 1)[0]
     samples = []
     i = 0
     for i in xrange(len(params)):
         p_i, mu_i, sigma_i = params[i]
-        #生成学生的样本, 符合mu1, sigma1^2 的高斯分布
+        #生成学生的样本, 符合mu1, sigma1 的高斯分布
         sample_i = np.random.normal(mu_i, sigma_i, sample_counts[i])
         samples.append(sample_i)
 
@@ -77,12 +71,10 @@ w(i,k) = p(zk|xi) = p(xi, zk)/p(xi)
 
 l = sum_n sum_k p(xi, zk) = sum_n(sum_k(w(zk,xi) * log(p(xi, zk)/w(zk,xi))))
 '''
-def EM_for_GMM(samples, init_params): 
+def EM_for_GMM(samples, init_params, loop_count): 
     m = len(samples)
     k = len(init_params)
     params = np.copy(init_params)
-
-    loop_count = 100
     x = samples
 
     for l in xrange(loop_count):
@@ -107,7 +99,7 @@ def EM_for_GMM(samples, init_params):
 
     return params
 
-def test_mix_norm_model(m):
+def test_mix_norm_model(m, loop_count):
     sample_params = np.array([[0.4, 1.7,  0.2], [0.6, 1.5, 0.25]])    #这一组非常不好区分。两个分布的重合度非常高，导致算不准
     sample_params = np.array([[0.4, 1.75, 0.1], [0.6, 1.5, 0.15]])    
     sample_params = np.array([[0.4, 1.85, 0.1], [0.6, 1.4, 0.15]])   #这一组比较好处理
@@ -117,9 +109,9 @@ def test_mix_norm_model(m):
     #生成初始参数
     rd = np.random.rand(sample_params.shape[0], sample_params.shape[1]) - 0.5
     init_params = sample_params * (1 - rd * 0.1)
-    init_params[:,0] = 1./len(init_params)
+    init_params[:,0] = 1./len(init_params)  #默认各分类下的概率相等
 
-    sim_rst = EM_for_GMM(samples, init_params)
+    sim_rst = EM_for_GMM(samples, init_params, loop_count)
 
     print "for  Sample count:", m
     print "Sample param:\n", sample_params
@@ -144,5 +136,6 @@ def test_mix_norm_model(m):
 
 if __name__ == "__main__":
     mlist = [ 200,500, 1000, 2000, 5000]
+    loop_count = 200
     for m in mlist:
-        test_mix_norm_model(m)
+        test_mix_norm_model(m, loop_count)
