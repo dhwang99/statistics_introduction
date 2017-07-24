@@ -91,7 +91,7 @@
 
 ####  1). maximum_likelihood
 >    用最大似然估计指数、正态、贝努利分布的参数（正态只估计了位置参数）
->    极大似然估计是求极大值的算法，也可以用数值方法求解：如牛顿法、梯度法、A_star算法等等
+>    极大似然估计是求参数使得l取极大值，也可以用数值方法求解：如牛顿法、梯度法、A_star算法等等
 
 >    code:[estimate/maximum_likelihood.py](maximum_likelihood.py)
 
