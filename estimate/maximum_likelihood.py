@@ -1,6 +1,7 @@
 #encoding: utf8
 
 import numpy as np
+import pdb
 
 '''
 极大似然估计.
@@ -58,16 +59,34 @@ def ML_for_Bernolli(n, p):
    f(xi;mu, sigma) = 1./(sqrt(2pi)*sigma) * exp(-(xi-mu)^2/(2*sigma^2)
    L = PI(f(xi; mu, sigma)
 2. 
-   l(sigma) = sum(log(1./(sqrt(2pi)*sigma)) - sum((xi-mu)^2/(2*sigma^2)
+   l(theta) = sum(log(1./(sqrt(2pi)*sigma)) - sum((xi-mu)^2/(2*sigma^2)
 
 3. deriv:
     sum(xi - mu) / (2*sigma^2) = 0
     mu = sum(xi)/n
 '''
-def ML_for_Norm(n, mu, sigma):
+def ML_for_Norm_mu(n, mu, sigma):
     samples = np.random.normal(mu, sigma, n)
     mu_head = samples.mean()
     return mu_head
+
+'''
+2. log function:
+   l(theta) = sum(log(1./(sqrt(2pi)*sigma)) - sum((xi-mu)^2/(2*sigma^2)
+            = sum(log(1/sqrt(2pi) -1/2*log(sigma^2) - sum((xi-mu)^2/(2*sigma^2)
+
+3. deriv:
+    partial(l)/partial(sigma^2) = -n/2*1/(sigma^2) + sum((xi-mu)^2) / 2*sigma^4 = 0
+    sigma^2 = sum(xi-mu)^2/n   #非无偏估计
+
+'''
+def ML_for_Norm_sigma(n, mu, sigma):
+    samples = np.random.normal(mu, sigma, n)
+    v = samples - samples.mean()
+    v2 = np.dot(v, v) / n
+    v2 = np.sqrt(v2)
+
+    return v2 
 
 def ML_test(test_count, l_fun, sample_count, *param):
     errors = np.zeros(test_count)
@@ -91,6 +110,9 @@ if __name__ == "__main__":
     print '\nmaximum likelihood for Bernolli distribute samples:'
     ML_test(test_count, ML_for_Bernolli, sample_count, 0.2)
     
-    print '\nmaximum likelihood for Normal distribute samples:'
-    ML_test(test_count, ML_for_Norm, sample_count, 2, 3)
+    print '\nmaximum likelihood for Normal distribute samples: Mu:'
+    ML_test(test_count, ML_for_Norm_mu, sample_count, 2, 3)
+    
+    print '\nmaximum likelihood for Normal distribute samples: Var:'
+    ML_test(test_count, ML_for_Norm_sigma, sample_count, 2, 3)
     
