@@ -90,7 +90,7 @@
 ## 2. 统计推断入门的一些算法
 
 ####  1). maximum_likelihood
->    用最大似然估计指数、正态、贝努利分布的参数（正态只估计了位置参数）
+>    用最大似然估计指数、正态、贝努利分布的参数（正态估计了位置、形状参数）
 >    极大似然估计是求参数使得l取极大值，也可以用数值方法求解：如牛顿法、梯度法、A_star算法等等
 
 >    code:[estimate/maximum_likelihood.py](estimate/maximum_likelihood.py)
