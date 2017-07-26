@@ -21,13 +21,14 @@ uniform不能通过极大似然求解。pdf: f(x) = 1/(b - a), 没有x参数
    log f = -log(theta) - x/theta
    l(x;theta) = sum(log f(xi; theta)) = -n * log(theta) - sum(xi)/theta 
 
-   logx, 1/x都是凹函数， 则上述函数为凸函数，可以求上式最大值
+   注：二阶导 不一定小于0
 
 3. deriv:
    l(x;theta) = -n/theta + sum(xi)/theta^2 = 0
 
    theta = sum(xi)/n
 '''
+
 def ML_for_Exp(n, theta):
     samples = np.random.exponential(theta, n)
     theta_head = samples.mean()
@@ -37,7 +38,7 @@ def ML_for_Exp(n, theta):
 
 '''
 1. 
-L(x;p) = PI(p^xi * (1-p)^(1-xi))
+  L(x;p) = PI(p^xi * (1-p)^(1-xi))
 2. 
   l(x;p) = sum(xi * logp + (1-xi) * log(1-p))
          = logp*sum(xi) +  log(1-p)*sum(1-xi)  , xi为0或1
