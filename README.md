@@ -101,3 +101,7 @@
 
 >    code:[estimate/EM_for_GMM.py](estimate/EM_for_GMM.py)
 >   image:[estimate/images/mix_norm](estimate/images/mix_norm)
+
+####  3). monte carlo方法
+>     a) 积分模拟计算. 用求期望的方式求积分。E(g(X)) = sum(g(X)f(X)), f(X)为均匀分布; 或者为原函数的分布, g(X)根据样本值取0,1
+>    code: [estimate/monte_carlo/intify_sim.py](estimate/monte_carlo/intify_sim.py)
