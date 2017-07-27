@@ -6,13 +6,11 @@ import pdb
 '''
 f(x) = x**3
 '''
-
 def f1_intify(bins):
     return 1./4 * ( bins[1]**4 - bins[0]**4) 
 
 def f1(x):
     return x**3
-
 
 def norm_cdf(bins):
     from scipy.stats import norm
@@ -74,6 +72,16 @@ def test_norm_intify_sim():
         print "x: %s; real v: %s; sim_v: %s" %(norm_x_p[0], norm_x_p[1], sim_v)
 
 
+def calcuate_pi():
+    nlist = [10000,100000,1000000]
+    for n in nlist:
+        x1 = np.random.random(n)
+        x2 = np.random.random(n)
+        x = np.array([x1,x2]).T
+        r2_list = np.apply_along_axis(lambda a: np.dot(a,a)/4., 1, x)
+        pi_count = np.where(r2_list <= 0.25)[0].size
+        print "n: %s; pi value:%s" % (n, pi_count * 4./n)
+
 if __name__ == "__main__":
     n = 10000
     n = 100000
@@ -96,3 +104,6 @@ if __name__ == "__main__":
     print "\nsim for norm intify by U distribution:"
     bins = np.array([-2., 2])
     test_intify_sim(norm_pdf,  norm_cdf, bins, n)
+
+    print "\n calcuate PI:"
+    calcuate_pi()

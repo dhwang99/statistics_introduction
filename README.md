@@ -104,4 +104,6 @@
 
 ####  3). monte carlo方法
 >     a) 积分模拟计算. 用求期望的方式求积分。E(g(X)) = sum(g(X)f(X)), f(X)为均匀分布; 或者为原函数的分布, g(X)根据样本值取0,1
+>       从试验结果看，采样数要比较大, 结果和真值更接近。比如 >= 100万
+>       增加了pi的简单模拟计算
 >    code: [estimate/monte_carlo/intify_sim.py](estimate/monte_carlo/intify_sim.py)
