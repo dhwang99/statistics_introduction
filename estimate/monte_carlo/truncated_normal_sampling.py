@@ -36,6 +36,8 @@ def truncated_normal_samples_by_AR(n, TN_param):
     
     return acc_samples
 
+'''
+'''
 if __name__ == "__main__":
     n = 100000
     TN_param = np.array([1., 1., 0., 4])
