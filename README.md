@@ -19,11 +19,11 @@
 
 >  包括从uniform生成符合正态分布、符合指数分布的随机数; 根据标准正态分布表汇制不同mu,sigma参数的正态分布图; 
 
->   用pdf生成正态、指数分布图；根据采样数据集合，生成直方图
+>   用pdf生成正态、指数分布图；根据采样数据集合，生成直方图. 采用的是随机变量积分变换的方法生成不同的分布
 
 >   备注下：用plt.bar生成柱状图时，需要 加条件:align='edge', 默认取 middle
 
->   code:[probility/gen_distribute_from_U.py](probility/gen_distribute_from_U.py)
+>   code:[probility/transformations_of_random_variables.py](probility/gen_distribute_from_U.py)
 
 >   images:[probility/images](probility/images)
 
@@ -105,7 +105,7 @@
 ####  3). monte carlo方法
 >    a) 积分模拟计算. 用求期望的方式求积分。E(g(X)) = sum(g(X)f(X)), f(X)为均匀分布; 或者为原函数的分布, g(X)根据样本值取0,1
 >       从试验结果看，采样数要比较大, 结果和真值更接近。比如 >= 100万
->       增加了pi的简单模拟计算
+>       增加了pi的简单模拟计算.
 >    code: [estimate/monte_carlo/intify_sim.py](estimate/monte_carlo/intify_sim.py)
 
 >    b) acceptance-reject sampling.接受、拒绝采样：即以 Mq(x)/p(x)的概率接受q(x)产生的样本. 生成了三角分布的样本, q=U
