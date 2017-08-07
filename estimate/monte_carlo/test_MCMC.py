@@ -41,23 +41,15 @@ def test_direct(N):
         u = np.random.random()
         
         pr = 0
-        hit = False
         for j in xrange(3):
             pr += Pi[j]
             if u <= pr:
                 x = j
-                hit = True
                 if i > 100:
                     x_samples[x] += 1
                 break
     
-        if hit == False:
-            print "not Hit. U:", u
-    
-       
-    
     x_total = x_samples.sum() * 1.0
-    
     x_samples = x_samples / x_total
     
     print "pi:", pi
@@ -73,35 +65,59 @@ alpha(y,xi) = p(y)Q(y,xi) = 1/3 * p(y)
 def test_MCMC(N):
     x = 0   #开始在第一个状态上
     x_samples = np.zeros(3)
-    q = np.array([[1/3., 1/3., 1/3.], [1/3., 1/3., 1/3.],[1/3., 1/3., 1/3.]])
     q = np.array([[0.1, 0.3, 0.6], [0.1, 0.3, 0.6], [0.1, 0.3, 0.6]])
+    q = np.array([[1/3., 1/3., 1/3.], [1/3., 1/3., 1/3.],[1/3., 1/3., 1/3.]])
+    q = np.array([[0.2, 0.4, 0.4], [0.4, 0.4, 0.2], [0.4, 0.2, 0.4]])
 
     for i in xrange(N):
         u1 = np.random.random()  #q(x,y) = 0.1, 0.3, 0.6
-        id = 0
-        t = q[x, id]
+        can = 0
+        xq = q[x, can]
         while True:
-            if u1 < t:
+            if xq > u1:
                 break
-            id += 1
-            t += q[x, id]
+            can += 1
+            xq += q[x,can]
 
-        al = pi[id]*q[id, x]   # p(y) * Q(y, xi)
-        al = pi[id]*q[id, x]/(pi[x] * q[x, id])   # p(y)*Q(y,xi)/p(xi)*Q(xi,y)
+        al = pi[can]*q[can, x]   # p(y) * Q(y, xi)
+        al = pi[can]*q[can, x]/(pi[x] * q[x, can])   # p(y)*Q(y,xi)/p(xi)*Q(xi,y)
+
         u = np.random.random()
         if u < al:
-            x = id  # 转移了. 可能会转移给自己
-        else:
-            x = x   # 未发生转移。 这次采样转移失败, 状态不变。这个一定要加上，要不会出问题. 但这个是错的
+            x = can  # 转移了. 可能会转移给自己
+            #x_samples[x] += 1
+        x_samples[x] += 1
 
-        if i > 100:
-            x_samples[x] += 1 
 
     x_total = x_samples.sum() * 1.0
     x_samples = x_samples / x_total
     
     print "pi:", pi
     print "N: %s; total sample: %s; \nsamples distribute ~ pi: %s" %(N, x_total, x_samples)
+
+'''
+Q为均匀分布的转移矩阵
+'''
+def test_MCMC_NO_QArray(N):
+    x = 0   #开始在第一个状态上
+    x_samples = np.zeros(3)
+
+    for i in xrange(N):
+        can = np.random.randint(3)   #Q为均匀分布。每个转移链上，向其它状态转移的概率相同
+        u = np.random.random()
+        #al = pi[can]/pi[x]   # p(y)*Q(y,xi)/p(xi)*Q(xi,y)
+        al = pi[can]*1/3.   # p(y) * Q(y, xi)
+        if u < al:
+            x = can  # 转移了. 可能会转移给自己
+            x_samples[x] += 1 
+        #x_samples[x] += 1 
+
+    x_total = x_samples.sum() * 1.0
+    x_samples = x_samples / x_total
+    
+    print "pi:", pi
+    print "N: %s; total sample: %s; \nsamples distribute ~ pi: %s" %(N, x_total, x_samples)
+
 
 '''
 这个需要推导一下
@@ -129,11 +145,14 @@ def test_MCMC_2(N):
 
 
 if __name__ == "__main__":
-    N = 100000
+    N = 10000
     N = 10000
 
     print "Test direct:"
     test_direct(N)
 
-    print "\nTest AB:"
+    print "\nTest Metropolis :"
     test_MCMC(N)
+
+    print "\nTest Metropolis no Q:"
+    test_MCMC_NO_QArray(N)

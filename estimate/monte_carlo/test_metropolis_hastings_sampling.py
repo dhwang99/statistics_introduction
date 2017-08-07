@@ -18,12 +18,16 @@ vec = []
 vec.append(x)
 innov = np.random.uniform(-alpha,alpha,n) #random inovation, uniform proposal distribution
 for i in xrange(1,n):
-    can = x + innov[i] #candidate
-    aprob = min([1.,sdnorm(can)/sdnorm(x)]) #acceptance probability
+    #can = innov[i] #candidate
+    inn = np.random.uniform(-alpha, alpha, 1)
+    #can = x + innov[i] #candidate
+    can = x + inn #candidate, random walk
+    #can = inn #candidate, random walk
+    aprob = np.min([1.,sdnorm(can)/sdnorm(x)]) #acceptance probability
     u = np.random.uniform(0,1)
     if u < aprob:
         x = can
-        vec.append(x)
+    vec.append(x)
 
 #plotting the results:
 #theoretical curve
