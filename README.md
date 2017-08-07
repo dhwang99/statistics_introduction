@@ -111,3 +111,10 @@
 >    b) acceptance-reject sampling.接受、拒绝采样：即以 Mq(x)/p(x)的概率接受q(x)产生的样本. 生成了三角分布的样本, q=U
 >    code: [estimate/monte_carlo/acceptance_rejection_sampling.py](estimate/monte_carlo/acceptance_rejection_sampling.py)
 >    image: [estimate/monte_carlo/images](estimate/monte_carlo/images)
+
+>    c) MCMC方法。这时有比较多的示例，包括M-H采样，Gibbs采样，不一一列举了。 
+>    有一个问题看起来还没有完全弄明白： M-H采样后，如果y被拒绝，样本值xi是否作为这一步的样本保留下来？
+>    <b>从结果看，保留下来，分布更准;  反之，如果不保留，分布飘得很厉害。只是这样样本集合里，重复的样本比较多。</b>
+>    code: [estimate/monte_carlo/](estimate/monte_carlo)
+>    image: [estimate/monte_carlo/images](estimate/monte_carlo/images)
+
