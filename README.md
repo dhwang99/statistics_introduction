@@ -116,12 +116,12 @@
 >    c) MCMC方法。这时有比较多的示例，包括M-H采样，Gibbs采样，不一一列举了。     
 >    有一个问题看起来还没有完全弄明白： M-H采样后，如果y被拒绝，样本值xi是否作为这一步的样本保留下来？     
 
->       <b>从结果看，保留下来，分布更准(包括原来算法里不保留结果的，改为保留后，效果不比原来的差；       
+   <b>    从结果看，保留下来，分布更准(包括原来算法里不保留结果的，改为保留后，效果不比原来的差；       
           此外，不保留的，Q基本是等概率采样);  反之，如果不保留，分布飘得很厉害。      
           不过这样的话，样本集合里，重复的样本比较多。</b>      
->       比如：test_metropolis_method.py里对xi进行了重复计数;       
->       test_metropolis_hastings_sampling.py 原始没有重复记录样本，但改为重复计后，分布还是一致的;       
->       对Q非均匀分布，如果不重复记，采样分布和实际分布差别会非常明显；参考 test_MCMC.py        
+        比如：test_metropolis_method.py里对xi进行了重复计数;       
+        test_metropolis_hastings_sampling.py 原始没有重复记录样本，但改为重复计后，分布还是一致的;       
+        对Q非均匀分布，如果不重复记，采样分布和实际分布差别会非常明显；参考 test_MCMC.py        
 
 >    code: [estimate/monte_carlo/](estimate/monte_carlo)
 >    image: [estimate/monte_carlo/images](estimate/monte_carlo/images)
