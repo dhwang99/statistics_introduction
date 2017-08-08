@@ -96,26 +96,31 @@
 >    code:[estimate/maximum_likelihood.py](estimate/maximum_likelihood.py)
 
 ####  2). EM求解GMM问题 
->   用EM算法估计学生身高分布中，学生比例（多项式分布）参数、身高分布（正态分布）参数。
+>   用EM算法估计学生身高分布中，学生比例（多项式分布）参数、身高分布（正态分布）参数。       
 >   从试验中可以看出，如果两个正态分布的mu差别较大，估计出来的值会准一些；此外，样本适当多点
 
 >    code:[estimate/EM_for_GMM.py](estimate/EM_for_GMM.py)
 >   image:[estimate/images/mix_norm](estimate/images/mix_norm)
 
 ####  3). monte carlo方法
->    a) 积分模拟计算. 用求期望的方式求积分。E(g(X)) = sum(g(X)f(X)), f(X)为均匀分布; 或者为原函数的分布, g(X)根据样本值取0,1
->       从试验结果看，采样数要比较大, 结果和真值更接近。比如 >= 100万
->       增加了pi的简单模拟计算.
+>    a) 积分模拟计算. 用求期望的方式求积分。E(g(X)) = sum(g(X)f(X)), f(X)为均匀分布; 或者为原函数的分布, g(X)根据样本值取0,1    
+>       从试验结果看，采样数要比较大, 结果和真值更接近。比如 >= 100万       
+>       增加了pi的简单模拟计算.       
 >    code: [estimate/monte_carlo/intify_sim.py](estimate/monte_carlo/intify_sim.py)
 
 >    b) acceptance-reject sampling.接受、拒绝采样：即以 Mq(x)/p(x)的概率接受q(x)产生的样本. 生成了三角分布的样本, q=U
 >    code: [estimate/monte_carlo/acceptance_rejection_sampling.py](estimate/monte_carlo/acceptance_rejection_sampling.py)
 >    image: [estimate/monte_carlo/images](estimate/monte_carlo/images)
 
->    c) MCMC方法。这时有比较多的示例，包括M-H采样，Gibbs采样，不一一列举了。 
->    有一个问题看起来还没有完全弄明白： M-H采样后，如果y被拒绝，样本值xi是否作为这一步的样本保留下来？
+>    c) MCMC方法。这时有比较多的示例，包括M-H采样，Gibbs采样，不一一列举了。     
+>    有一个问题看起来还没有完全弄明白： M-H采样后，如果y被拒绝，样本值xi是否作为这一步的样本保留下来？     
 
->    <b>从结果看，保留下来，分布更准(包括原来算法里不保留结果的，改为保留后，效果不比原来的差；此外，不保留的，Q基本是等概率采样);  反之，如果不保留，分布飘得很厉害。只是这样样本集合里，重复的样本比较多。</b>
+>    <b>从结果看，保留下来，分布更准(包括原来算法里不保留结果的，改为保留后，效果不比原来的差；       
+        此外，不保留的，Q基本是等概率采样);  反之，如果不保留，分布飘得很厉害。只是这样样本集合里，重复的样本比较多。</b>      
+
+>       比如：test_metropolis_method.py里对xi进行了重复计数;       
+>       test_metropolis_hastings_sampling.py 原始没有重复记录样本，但改为重复计后，分布还是一致的;       
+>       对Q非均匀分布，如果不重复记，采样分布和实际分布差别会非常明显；参考 test_MCMC.py        
 
 >    code: [estimate/monte_carlo/](estimate/monte_carlo)
 >    image: [estimate/monte_carlo/images](estimate/monte_carlo/images)
