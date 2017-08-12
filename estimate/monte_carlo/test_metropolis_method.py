@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import pdb
 
+'''
+该方法采样中，y不会接受时，xi 会留在样本中，并加1次概率
+'''
+
 def q(x, y):
     g1 = mlab.bivariate_normal(x, y, 1.0, 1.0, -1, -1, -0.8)
     g2 = mlab.bivariate_normal(x, y, 1.5, 0.8, 1, 2, 0.6)
