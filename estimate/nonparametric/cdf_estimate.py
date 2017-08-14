@@ -7,10 +7,18 @@ from scipy.stats import cauchy
 
 import pdb
 
+'''
+生成norm, cauchy的样本(loc=0, scale=1), 取alpha=0.05, 检验edf对真值的覆盖情况
+共验证了一千次，比例略高于95%. 这个主要是因为 hoeffding 不等式条件相对较松导致
+
+因为分布来自正态/cauche, 改用gauss算了下. 分布更宽(不用能正态分布来计算置信区间，估计无法说明是渐进正态的)
+'''
+
 def check_cdf_estimate(stat, M, N):
     alpha = 0.05
     epsilon = np.sqrt(1./(2*N)*np.log(2/alpha))  #P(Psupx(|hat_F - F| > epsilon) <= 2*exp(-2n*epsilon**2) = alpha
     not_hit = 0
+    #epsilon = 2 * 1/np.sqrt(N*1.)
     
     for i in xrange(M):
         samples = stat.rvs(size=N, loc=0, scale=1)

@@ -6,7 +6,7 @@ from scipy.stats import uniform
 import matplotlib.pyplot as plt
 import pdb
 
-from test_confidence_band import cal_and_plot_confidence_band
+from cdf_estimate import cal_and_plot_confidence_band
 
 faithful_eruption = np.loadtxt('faithful.dat.lst')
 etime = faithful_eruption[:,2]
