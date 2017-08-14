@@ -28,7 +28,8 @@ def gen_noising_img(sigma = 1., filename='lettera.bmp'):
     
     #generate init data
     init_X = 2. * (local_evidence[:,:, 0] < local_evidence[:, :, 1]) - 1
-    
+
+    #加噪音后的数据，初始化数据， norm pdf (mu=-1, 1)
     return img_arr, init_X, local_evidence
 
 

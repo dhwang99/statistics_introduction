@@ -8,8 +8,6 @@ import pdb
 
 L(x;theta) = max PI(p(xi;theta)) = max(sum(log(p(xi;theta))))
 
-uniform不能通过极大似然求解。pdf: f(x) = 1/(b - a), 没有x参数
-
 '''
 
 '''
