@@ -127,3 +127,13 @@
 >    code: [estimate/monte_carlo/](estimate/monte_carlo)
 >    image: [estimate/monte_carlo/images](estimate/monte_carlo/images)
 
+####  4). nonparametric estimate(CDF, CDF function estimate) 
+>    在没有任何假设的前提下，进行分布估计、点估计及计算估计的alpha置信区间。        
+>    其中CDF估计及其区间估计，参考 cdf_estimate.py (原分布为norm, cauchy); ()        
+>    基于老实泉的喷射时间，估计了老实泉的平均等待时间和95%置信区间 (estimate_faithful_eruption.py)        
+>    此外，几个习题结果也算了下，放在 char7.py里
+
+####  5).  bootstrap and jackknife
+>     实现了 bootstrap, jackknife采样估计统计函数值的方法。主要实现了估计均值/相关系数、估计它们的方差、估计置信区间等.
+>     并给出了估计区间和近似正态时计算区间的差异
+

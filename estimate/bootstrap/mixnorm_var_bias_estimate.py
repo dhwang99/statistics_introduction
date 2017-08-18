@@ -33,7 +33,7 @@ def gen_mix_norm_samples(N):
 
     return samples
 
-def estimate_var_bias_by_bootstrap(samples, B):
+def estimate_var_bias_by_bootstrap(samples, B, savefig=False):
     N = samples.shape[0]
     X_mean = samples.mean()
     X_mean_samples = np.zeros(B)
@@ -52,10 +52,16 @@ def estimate_var_bias_by_bootstrap(samples, B):
     print "bootstrap for B:%s, mean: %4f, boot_mean: %.4f, std: %.4f, bias: %.4f" %\
             (B, X_mean, boot_X_mean, np.sqrt(boot_X_var), bias)
 
+    if savefig:
+        group_count = int(np.sqrt(B))
+        ranges = [4.6, 5.4]
+        plt.hist(X_mean_samples, bins = group_count, range=ranges, normed=True, color='r', alpha=0.6)
+        plt.savefig('images/mix_norm_by_bootstrap_B_%s.png'%B, format='png')
+
     return
 
 
-def estimate_var_bias_by_knife(samples, miss_num=1):
+def estimate_var_bias_by_jackknife(samples, miss_num=1):
     N = samples.shape[0]
     X_mean = samples.mean()
     X_mean_samples = np.zeros(N)
@@ -72,8 +78,13 @@ def estimate_var_bias_by_knife(samples, miss_num=1):
     '''
     加一个错误的输出。如果直接用 X_mean_samples.var()求样本标准差，和真实的标准差差别太大. 所以一定要用标准的方法计算
     '''
-    print "kinfe mean: %4f, knife_mean: %.4f, std: %.4f, std(error): %.4f, bias: %.4f" %\
+    print "kinfe mean: %4f, jackknife_mean: %.4f, std: %.4f, std(error): %.4f, bias: %.4f" %\
             (X_mean, kinfe_X_mean, np.sqrt(kinfe_X_var), np.sqrt(error_var), bias)
+
+    group_count = int(np.sqrt(B))
+    ranges = [4.6, 5.4]
+    plt.hist(X_mean_samples, bins = group_count, range=ranges, normed=True, color='r', alpha=0.6)
+    plt.savefig('images/mix_norm_by_jackknife_N_%s.png'%N, format='png')
 
     return
 
@@ -81,8 +92,11 @@ def estimate_var_bias_by_knife(samples, miss_num=1):
 if __name__ == "__main__":
     B_list = np.array([5, 10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000])
     samples = gen_mix_norm_samples(200)
-    for B in B_list:
-        estimate_var_bias_by_bootstrap(samples, B)
+    for B in B_list[:-1]:
+        estimate_var_bias_by_bootstrap(samples, B, True)
+        plt.clf()
+    estimate_var_bias_by_bootstrap(samples, B_list[-1], True)
     
     print ""
-    estimate_var_bias_by_knife(samples, B)
+    plt.clf()
+    estimate_var_bias_by_jackknife(samples, B)
