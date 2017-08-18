@@ -111,5 +111,3 @@ if __name__ == "__main__":
     plt.clf()
     plt.imshow(X, cmap='gray')
     plt.savefig('images/la_denoising_by_gibbs.png', format='png')
-
-

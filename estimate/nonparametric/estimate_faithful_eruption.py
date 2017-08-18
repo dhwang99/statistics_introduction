@@ -27,8 +27,6 @@ confidence_interval = np.array([hat_x_e - z_2a * hat_se, hat_x_e + z_2a * hat_se
 
 print "%s confidence interval for mean is: %s" % (1-alpha, confidence_interval)
 
-pdb.set_trace()
-
 sorted_data = np.sort(etime)
 N = sorted_data.shape[0]
 alpha = 0.05

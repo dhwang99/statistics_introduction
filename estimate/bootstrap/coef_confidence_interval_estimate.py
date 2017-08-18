@@ -8,17 +8,12 @@ import pdb
 
 
 '''
-LSAT (Y)    576 635 558 578 666 580 651 605 653 575 545 572
-GPA (Z) 3.39    3.30    2.81    3.03    3.44    3.07    3.36    3.13    3.12    2.74    2.76    2.88
-
 估计相关系数及相关系数估计的置信区间（和假设渐进正态的结果进行比较）
 要画出直方图
-
 '''
 
 def coef(samples):
     dm = samples.T - samples.mean(axis=1)
-
     cov = np.dot(dm.T, dm)
     cf = cov[0, 1] / np.sqrt(cov[0,0]*cov[1,1])
 
@@ -42,7 +37,7 @@ def estimate_coef(samples, B):
 '''
 这是一个错误的算法
 '''
-def get_ppf_but_error(samples, alpha):
+def get_interval_but_error(samples, alpha):
     samples.sort()
     m = samples.mean()
     cf = 1 - alpha
@@ -67,9 +62,9 @@ def get_ppf_but_error(samples, alpha):
     return [samples[li], samples[hi]]
 
 '''
-find the min interval which cover (1-alpha) data
+find the min interval which cover (1-alpha) samples 
 '''
-def get_ppf(samples, alpha):
+def get_interval(samples, alpha):
     samples.sort()
     cf = 1 - alpha
     N = samples.shape[0] 
@@ -111,5 +106,5 @@ if __name__ == "__main__":
     plt.hist(coefs, bins = group_count, normed=True, color='r', alpha=0.6)
     plt.savefig('images/coef_confidence.png', format='png')
     
-    cf = get_ppf(coefs, alpha)
+    cf = get_interval(coefs, alpha)
     print "estimate confidence interval for B times is: [%.4f, %.4f]" % (cf[0], cf[1])
