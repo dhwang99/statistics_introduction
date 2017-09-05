@@ -49,7 +49,7 @@ def estimate_var_bias_by_bootstrap(samples, B, savefig=False):
     boot_X_var = X_mean_samples.var()
     bias = boot_X_mean - X_mean
 
-    print "bootstrap for B:%s, mean: %4f, boot_mean: %.4f, std: %.4f, bias: %.4f" %\
+    print "bootstrap for B:%s, mean: %4f, boot_mean: %.5f, std: %.5f, bias: %.5f" %\
             (B, X_mean, boot_X_mean, np.sqrt(boot_X_var), bias)
 
     if savefig:
@@ -78,7 +78,7 @@ def estimate_var_bias_by_jackknife(samples, miss_num=1):
     '''
     加一个错误的输出。如果直接用 X_mean_samples.var()求样本标准差，和真实的标准差差别太大. 所以一定要用标准的方法计算
     '''
-    print "kinfe mean: %4f, jackknife_mean: %.4f, std: %.4f, std(error): %.4f, bias: %.4f" %\
+    print "kinfe mean: %4f, jackknife_mean: %.5f, std: %.5f, std(error): %.5f, bias: %.5f" %\
             (X_mean, kinfe_X_mean, np.sqrt(kinfe_X_var), np.sqrt(error_var), bias)
 
     group_count = int(np.sqrt(B))

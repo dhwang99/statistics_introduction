@@ -27,10 +27,3 @@ test_pufun(l, a,  100)
 test_pufun(l, a,  1000)
 test_pufun(l, a,  10000)
 test_pufun(l, a,  100000)
-
-
-        
-
-
-
-    

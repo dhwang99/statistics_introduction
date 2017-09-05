@@ -4,34 +4,47 @@ import numpy as np
 import pdb
 
 '''
-极大似然估计.
+1. 矩估计:
+1.1 求X的j阶矩: aj(theta) (aj带所有求参数)
+1.2 求数据 X1, ..., Xn的样本矩, hat_aj
+1.3 aj(hat_theta) = hat_aj, 求出 hat_theta
+1.4 mse
+1.5 var of hat_theta: 不成就用嵌入式估计量进行估计，复杂的用bootstrap方法进行估计
+
+
+2. 极大似然估计.
 
 L(x;theta) = max PI(p(xi;theta)) = max(sum(log(p(xi;theta))))
 
 '''
 
 '''
-1. likelihood function: 
+2.1. likelihood function: 
    f(x; theta) = 1/theta*exp(-x/theta), x>0
    L(x; theta) = PI(f)
 
-2. log likelihood function:
+2.2. log likelihood function:
    log f = -log(theta) - x/theta
    l(x;theta) = sum(log f(xi; theta)) = -n * log(theta) - sum(xi)/theta 
 
    注：二阶导 不一定小于0
 
-3. deriv:
+2.3. deriv:
    l(x;theta) = -n/theta + sum(xi)/theta^2 = 0
 
    theta = sum(xi)/n
+
+2.4 MSE
+
+2.5 std error
+
 '''
 
 def ML_for_Exp(n, theta):
     samples = np.random.exponential(theta, n)
-    theta_head = samples.mean()
+    theta_hat = samples.mean()
 
-    return (theta_head)
+    return (theta_hat)
 
 
 '''
@@ -49,9 +62,9 @@ def ML_for_Exp(n, theta):
 def ML_for_Bernolli(n, p):
     samples = np.random.binomial(1, p, n)
     sum_one = samples.sum()
-    p_head = sum_one * 1. / n
+    p_hat = sum_one * 1. / n
 
-    return (p_head)
+    return (p_hat)
 
 '''
 1. 
@@ -70,13 +83,42 @@ def ML_for_Bernolli(n, p):
 '''
 def ML_for_Norm_mu(n, mu, sigma):
     samples = np.random.normal(mu, sigma, n)
-    mu_head = samples.mean()
+    mu_hat = samples.mean()
 
-    v = samples - mu_head
+    v = samples - mu_hat
     v2 = np.dot(v, v) / n
     v2 = np.sqrt(v2)
 
-    return (mu_head, v2)
+    return (mu_hat, v2)
+
+'''
+because:
+  L(a,b) = \Pi (1/(b - a)^n, min(Xi) >= a, max(Xi) <= b
+  otherwise: L(a,b) = 0 (因为连乘，Xi <a或Xi>b时，概率为0， 连乘为0)
+therefore: 
+  a = min(Xi), b = max(Xi), L取到最大值
+'''
+def ML_for_uniform(n, a, b):
+    samples = np.random.random() * (b - a) + a
+    hat_a = np.min(samples)
+    hat_b = np.max(samples)
+    
+    # \tau = \int xdF(x), estimate hat_tau
+    # \tau = (b-a)/2, 由mle估计的同变性，hat_tau = (hat_b - hat_a)/2
+    tau = (b -a)/2.
+    hat_tau = (hat_b - hat_a)/2 
+
+    #nonparametric plugin-estimator \sim r(x)dF(x) = 1/n sum(r(xi))
+    sim_tau = samples.mean()  # 1/n*sum(r(Xi)) = 1/n * sum(Xi)
+    
+    d = hat_tau - tau
+    mse_hat_tau = d * d
+
+    d = sim_tau - tau
+    mse_sim_tau = d * d
+
+    
+
 
 def ML_test(test_count, l_fun, sample_count, *param):
     es_num = len(param)
@@ -84,9 +126,9 @@ def ML_test(test_count, l_fun, sample_count, *param):
     thetas = np.zeros((test_count, es_num))
 
     for i in xrange(test_count):
-        thetas_head = l_fun(sample_count, *param)
-        errors[i, :] = np.array(param) - thetas_head
-        thetas[i, :] = thetas_head
+        thetas_hat = l_fun(sample_count, *param)
+        errors[i, :] = np.array(param) - thetas_hat
+        thetas[i, :] = thetas_hat
 
     for i in xrange(es_num):
         print "real param (%s,%s): %s; estimate: %s; var: %s" % (es_num, i, param[i], thetas[:,i].mean(), thetas[:,i].var())

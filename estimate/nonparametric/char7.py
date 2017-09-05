@@ -33,10 +33,10 @@ h_theta = h_p1 - h_p2
 h_se_theta = np.sqrt(0.9*0.1/100. + 0.85 * 0.15/100.) 
 
 alpha = 0.2
-delta = h_se_theta * norm.ppf(1-2*alpha)
+delta = h_se_theta * norm.ppf(1-alpha/2)
 print "confidence interval for alpha=%s is: %s" % (alpha, [h_se_theta - delta, h_se_theta + delta])
 
-alpha = 0.025
-delta = h_se_theta * norm.ppf(1-2*alpha)
+alpha = 0.05
+delta = h_se_theta * norm.ppf(1-alpha/2)
 print "confidence interval for alpha=%s is: %s" % (alpha, [h_se_theta - delta, h_se_theta + delta])
 

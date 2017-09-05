@@ -80,8 +80,8 @@ def get_interval(samples, alpha):
 
 
 if __name__ == "__main__":
-    scores = np.array([[576,635,558,578,666,580,555,661,651,605,653,575,545,572], 
-                   [3.39,3.30,2.81,3.03,3.44,3.07,3.00, 3.43,3.36,3.13,3.12,2.74,2.76,2.88]])
+    scores = np.array([[576,635,558,578,666,580,555,661,651,605,653,575,545,572, 594], 
+                   [3.39,3.30,2.81,3.03,3.44,3.07,3.00, 3.43,3.36,3.13,3.12,2.74,2.76,2.88, 2.96]])
 
     B_list = np.array([5, 10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000])
     
@@ -93,18 +93,28 @@ if __name__ == "__main__":
         coefs = estimate_coef(scores, B)
         hat_mean, hat_se = coefs.mean(), coefs.std()
 
+
         print "Estimate mean and var, B=%s, mean=%.4f, se=%.4f" %(B, hat_mean, hat_se)
 
     #计算最后一次估计的置信区间(认为渐进正态)，画出直方图
-   
     alpha = 0.05
+    #normal
     hat_se1 = hat_se * norm.ppf(1-alpha/2)
+    print "Normal: confidence interval is:  [%.4f, %.4f]" % (max(0, hat_mean-hat_se1), min(1, hat_mean+hat_se1))
 
-    print "confidence interval for B times is: [%.4f, %.4f]" % (max(0, hat_mean-hat_se1), min(1, hat_mean+hat_se1))
+    #percentile method:
+    theta_a = np.percentile(coefs, alpha * 100/2.)
+    theta_b = np.percentile(coefs, (1. - alpha/2) * 100)
+    print "Percentile: confidence interval is:  [%.4f, %.4f]" % (theta_a, theta_b)
+
+    #pivotal method:
+    theta_pa = 2 * hat_mean - theta_b
+    theta_pb = 2 * hat_mean - theta_a
+    print "Pivotal: confidence interval is:  [%.4f, %.4f]" % (theta_a, theta_b)
 
     group_count = int(np.sqrt(B))
     plt.hist(coefs, bins = group_count, normed=True, color='r', alpha=0.6)
     plt.savefig('images/coef_confidence.png', format='png')
     
     cf = get_interval(coefs, alpha)
-    print "estimate confidence interval for B times is: [%.4f, %.4f]" % (cf[0], cf[1])
+    print "Max Conver: estimate confidence interval is: [%.4f, %.4f]" % (cf[0], cf[1])
