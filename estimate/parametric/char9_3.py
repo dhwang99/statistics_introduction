@@ -49,9 +49,11 @@ for b in xrange(B):
     B_tau_samples[b] = b_sample
 
 hat_tau = B_tau_samples.mean()
-hat_se_hat_tau = B_tau_samples.std() 
+hat_se_hat_tau = B_tau_samples.std()
 confidence_interval = np.array([hat_tau - hat_se_hat_tau * z_alpha, \
                                hat_tau + hat_se_hat_tau * z_alpha])
 
-print "Bootstrap: hat_tau:%.4f, hat_se_hat_tau:%.4f, confidence_interval: %.4f, %.4f" % \
-       (hat_tau, hat_se_hat_tau, confidence_interval[0], confidence_interval[1])
+bias_tau = B_tau_samples.mean() - hat_tau
+mse_tau = B_tau_samples.var() + bias_tau * bias_tau 
+print "Bootstrap: hat_tau:%.4f, hat_se_hat_tau:%.4f, mse of tau: %.4f, confidence_interval: %.4f, %.4f" % \
+       (hat_tau, hat_se_hat_tau, mse_tau, confidence_interval[0], confidence_interval[1])

@@ -5,22 +5,37 @@ import pdb
 
 '''
 moment:
-alpha1 = (b+a)/2, a1 = 1/n sum(Xi)
-alpha2 = E(X^2) = (b^2 + ab + a^2)/3, a2 = 1/n sum(Xi^2)
-or 
-alpha2 = V(X) + E^2(X) 
-alpha2 - alpha1 = V(X) = (b-a)^2/12 
-(b-a)^2/12 = a2 - a1^2
-(b - 2*es_alpha1 + b) = sqrt(12*(a2 + a1^2))
-hat_b = a1 + sqrt(3*(a2+ a1^2))
-hat_a = a1 - sqrt(3*(a2+ a1^2))
+    a1 = (b+a)/2, a1 = 1/n sum(Xi)
+     
+    a2 = E(X^2) = (b^2 + ab + a^2)/3, a2 = 1/n sum(Xi^2)
+    or 
+    a2 = V(X) + E^2(X) 
+    a2 - a1 = V(X) = (b-a)^2/12 
+
+    (b-a)^2/12 = a2 - a1^2
+    (b - 2*es_a1 + b) = sqrt(12*(a2 + a1^2))
+    hat_b = a1 + sqrt(3*(a2+ a1^2))
+    hat_a = a1 - sqrt(3*(a2+ a1^2))
+
+    tau_hat = 1/n * sum(Xi)
+
+    mse: find analytically
+    
+    bias(tau) = 0
+    var(tau) = 1/n var(X)
+    mse = var(tau) + bias(tau)**2 = var(tau)
 
 mle:
-because:
-  L(a,b) = \Pi (1/(b - a)^n, min(Xi) >= a, max(Xi) <= b
-  otherwise: L(a,b) = 0 (因为连乘，Xi <a或Xi>b时，概率为0， 连乘为0)
-therefore: 
-  a = min(Xi), b = max(Xi), L取到最大值
+ because:
+   L(a,b) = \Pi (1/(b - a)^n, min(Xi) >= a, max(Xi) <= b
+   otherwise: L(a,b) = 0 (因为连乘，Xi <a或Xi>b时，概率为0， 连乘为0)
+ therefore: 
+   a = min(Xi), b = max(Xi), L取到最大值
+
+   tau_hat = (a_hat + b_hat)/2
+
+ mse: simulate by parameter bootstrap, and tau alternated by tau_hat (tau_hat --P--> tau)
+     
 '''
 def ML_for_uniform(n, a, b):
     tau = (b + a)/2.
