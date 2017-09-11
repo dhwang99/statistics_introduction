@@ -91,32 +91,6 @@ def ML_for_Norm_mu(n, mu, sigma):
 
     return (mu_hat, v2)
 
-'''
-because:
-  L(a,b) = \Pi (1/(b - a)^n, min(Xi) >= a, max(Xi) <= b
-  otherwise: L(a,b) = 0 (因为连乘，Xi <a或Xi>b时，概率为0， 连乘为0)
-therefore: 
-  a = min(Xi), b = max(Xi), L取到最大值
-'''
-def ML_for_uniform(n, a, b):
-    samples = np.random.random() * (b - a) + a
-    hat_a = np.min(samples)
-    hat_b = np.max(samples)
-    
-    # \tau = \int xdF(x), estimate hat_tau
-    # \tau = (b-a)/2, 由mle估计的同变性，hat_tau = (hat_b - hat_a)/2
-    tau = (b -a)/2.
-    hat_tau = (hat_b - hat_a)/2 
-
-    #nonparametric plugin-estimator \sim r(x)dF(x) = 1/n sum(r(xi))
-    sim_tau = samples.mean()  # 1/n*sum(r(Xi)) = 1/n * sum(Xi)
-    
-    d = hat_tau - tau
-    mse_hat_tau = d * d
-
-    d = sim_tau - tau
-    mse_sim_tau = d * d
-
     
 
 

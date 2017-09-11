@@ -9,7 +9,7 @@ import pdb
 X1, X2, ..., Xn ~ N(mu, 1)
 seta = exp(mu)
 
-get hat_se(seta), 0.9 confience interval of seta, using delta
+get hat_se(seta), 0.9 confience interval of seta, using delta 
 get hat_se(seta) by delta, parameter bootstrap, no parameter bootstrap 
 
 compare delta, param boostrap, nonbootstrap, we find delta and param boostrap is more stable
@@ -27,7 +27,7 @@ ppf_0_95 = norm.ppf(0.975, loc=mu, scale=sigma)
 #mle and delta
 X_mean = samples.mean()
 hat_seta = np.exp(X_mean)
-hat_se_seta_delta = np.sqrt((sigma**2) * 1./n) * np.exp(X_mean) 
+hat_se_seta_delta = np.sqrt((sigma**2) * 1./n) * np.exp(X_mean)
 cn = [hat_seta - ppf_0_95 * hat_se_seta_delta, hat_seta + ppf_0_95 + hat_se_seta_delta]
 
 print "delta method: hat_seta: %.4f; hat_se: %.4f; confience interval: [%.4f, %.4f]" % \
