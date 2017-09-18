@@ -9,12 +9,11 @@ import pdb
 
 '''
 test hypothetical: 用抽样的方法，来检查关于总体的H0假设(null hypothetical)能否被推翻，H1(备假设)能否被接受
-
 '''
 
 '''
-total < H0: accept H0
-
+HO: total <= c
+P(X > c) = P(X in [c,n]) 
 '''
 def power_function_for_binomial(theta, n, c):
     beta_theta = 0.
@@ -43,7 +42,6 @@ c = Phi_inv(1-alpha)*sigma/sqrt(n) + mu0
 X_bar > c:
 (X_bar - mu0)*sqrt(n)/sigma > Phi_inv(1-alpha)
 Phi(X_bar - mu0)*sqrt(n)/sigma > 1-alpha
-
 '''
 def power_function_for_norm(mu, sigma, n, c):
     z = (c - mu)*np.sqrt(n)/sigma
@@ -55,6 +53,47 @@ def c_norm(mu0, sigma, alpha, n):
     c = norm.ppf(1-alpha) * sigma/np.sqrt(n) + mu0
     return c
 
+'''
+err1 = alpha = 0.1
+err2 = beta = 0.2
+
+正态样本容量，用来控制第二类错误(这么说还好不对)
+delta 默认为一个标准差
+
+Phi((c - mu0)*sqrt(n)/sigma) <= (1-alpha)
+c <= ppf(1-alpha) * sigma/sqrt(n) + mu0
+
+ds = delta / sigma  #delta,sigma指定后，这个就确定了。引入这个变量主要是方例后继的计算
+mu = mu0 + delta
+Phi((c - mu)*sqrt(n)/sigma) < beta
+Phi((c - mu)*sqrt(n)/sigma) <  beta
+Phi((c - mu0 - delta)*sqrt(n)/sigma) < beta
+(c - mu0 - delta)*sqrt(n)/sigma) < Phi(beta)
+(c - mu0 - delta)*sqrt(n)/sigma) < -Phi(1-beta)
+
+#c取最大值，有
+(Za * sigma/sqrt(n) + mu0 - mu0 - delta)*sqrt(n)/sigma) < -Zbeta
+Za - delta*sqrt(n)/sigma < -Zbeta
+sqrt(n) > (Za + Zbeta) * sigma/delta
+'''
+def norm_sample_contain(sigma, delta, max_alpha=0.1, max_beta=0.2):
+    if delta == None:
+        delta = sigma
+   
+    Za =  norm.ppf(1-max_alpha)
+    Zb = norm.ppf(1-max_beta)
+
+    min_sqrt_n = (Za + Zb) * sigma / delta 
+    n = np.ceil(min_sqrt_n ** 2)
+
+    return n
+
+'''
+计算正态分布下的p值
+'''
+def p_value():
+
+    return None
 
 if __name__ == "__main__":
     colors = ['g', 'b', 'k']
@@ -87,6 +126,34 @@ if __name__ == "__main__":
         plt.plot(mus, pw_vals, color=colors[cid])
         plt.plot([mu0, mu0], [0, alpha], color=colors[cid])
 
+        print "norm hypothetical test, m0:%.4f; c:%.4f; alpha: %.4f" %(mu0, c, alpha)
+
     plt.plot([mus[0], mus[-1]], [alpha, alpha], color='r')
 
     plt.savefig('images/norm_power_function.png', format='png')
+
+    #test contain of samples
+    mu0 = 0
+    sigma = 1.
+    
+    betas = np.linspace(0.01, 0.3, num=50)
+    contains = np.zeros(len(betas))
+    for i in xrange(len(betas)): 
+        beta = betas[i]
+        n = norm_sample_contain(sigma, delta=sigma, max_alpha=0.1, max_beta=beta)
+        contains[i] = n
+
+    plt.clf()
+    plt.plot(betas, contains, color='r')
+    print "betas:", betas
+    print "n:", contains
+
+    for i in xrange(len(betas)): 
+        beta = betas[i]
+        n = norm_sample_contain(sigma, delta=sigma, max_alpha=0.05, max_beta=beta)
+        contains[i] = n
+    plt.plot(betas, contains, color='k')
+    print "betas:", betas
+    print "n:", contains
+
+    plt.savefig('images/norm_contain.png', format='png')
