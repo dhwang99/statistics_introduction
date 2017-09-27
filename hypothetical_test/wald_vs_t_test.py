@@ -13,6 +13,7 @@ X ~ N(mu, sigma), mu,sigma都未知
 
 wald test: 适合大样本;
 t test: 适合小样本
+当自由度 >= 50时，t分布和标准正态分布接近了。于是可以直接用wald test
 
 wald test:
     W = sqrt(n)*(mu_hat - mu0)/se_hat, se_hat: 公式; 样本方差代替;  bootstrap方法
