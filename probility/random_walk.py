@@ -93,4 +93,3 @@ if __name__ == "__main__":
     for i in range(1,6):
         plot_random_walk(10000, 0.1 * i, 10000,  5)
         plot_random_walk(10000, 0.1 * i, 100,  5)
-
