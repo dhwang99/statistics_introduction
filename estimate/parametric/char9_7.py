@@ -47,8 +47,8 @@ phi_hat = p1_hat - p2_hat
 
 # delta method
 var_phi_hat = p1_hat*(1-p1_hat)/n1 + p2_hat * (1-p2_hat)/n2
-var_phi_hat = np.sqrt(var_phi_hat)
-cf = [phi_hat - 1.96 * var_phi_hat, phi_hat + 1.96 * var_phi_hat]
+std_phi_hat = np.sqrt(var_phi_hat)
+cf = [phi_hat - 1.96 * std_phi_hat, phi_hat + 1.96 * std_phi_hat]
 
 print "mle & delta: phi_hat:%.4f, confidence interval: %.4f, %.4f" % (var_phi_hat, cf[0], cf[1]) 
 
