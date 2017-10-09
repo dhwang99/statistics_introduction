@@ -1,7 +1,6 @@
 # encoding: utf8
 
 '''
-
 随机变量的积分变换
 
 下面的基于U(0,1)实现了几个常用的连续随机变量概率分布的随机数模拟
@@ -12,6 +11,8 @@ PMF: probility mass function
 PDF: probility density function
 
 对任意随机变量X, 它有连续的的CDF F(x), 定义随机变量 Y=F(X), 则Y为 [0,1]上的均匀分布，即有 P(Y<=y) = y 
+
+box-muller方法并没有了解原理
 '''
 
 import numpy as np
@@ -56,8 +57,10 @@ def gen_gauss_distribute_pdf(mu, sigma, sample_count, max_x):
 
     return gauss_x, gauss_y
 
-#画直方图
-#a, 样本值，
+'''
+画直方图
+a, 样本值
+'''
 def plt_hist(a, color='r', normed=False):
     sample_count = len(a)
     a.sort()
@@ -84,12 +87,15 @@ def plt_hist(a, color='r', normed=False):
         hist /= width #概率是面积。除以这个得到高度
 
     plt.bar(bins[0:group_count], hist, width = width, facecolor = 'lightskyblue',edgecolor = 'white', align='edge')
-
+    '''
     #也可以直接用这个来汇制直方图
-    #plt.hist(a, bins = group_count, normed=normed)
+    plt.hist(a, bins = group_count, normed=normed)
+    '''
 
-#样本数一般要 > 100
-#使用均匀分布随机数，生成符合正态分布的随机数
+'''
+样本数一般要 > 100
+使用均匀分布随机数，生成符合正态分布的随机数
+'''
 def gen_gauss_samples_byU(sample_count):
     sim_gauss_num = np.zeros(sample_count)
     sim_u = np.zeros(sample_count)
@@ -101,6 +107,23 @@ def gen_gauss_samples_byU(sample_count):
         sim_u[i] = u
 
     return sim_u, sim_gauss_num
+
+'''
+正态随机变量分布
+box muller方法:
+    U0, U1独立，且U0, U1 ~ Uniform[0,1], 则
+    Z0 = sqrt(-2ln(U0))cos(2*pi*U1)
+    Z1 = sqrt(-2ln(U1))sin(2*pi*U0)
+    且Z0, Z1独立, 且服从正态分布
+'''
+def gen_gauss_samples_by_BoxMuller(sample_count):
+    U0 = np.random.uniform(0, 1, size=sample_count)
+    U1 = np.random.uniform(0, 1, size=sample_count)
+
+    Z0 = np.sqrt(-2 * np.log(U0)) * np.cos(2 * np.pi * U1)
+    Z1 = np.sqrt(-2 * np.log(U1)) * np.sin(2 * np.pi * U0)
+
+    return Z0, Z1
 
 '''
 使用均匀分布随机数，生成符合指数分布的随机数
@@ -133,9 +156,11 @@ def gen_exp_distribute_pdf(sample_count, beta, max_x):
 
     return x,y
 
-#分组的数量在5－12之间较为适宜(本程序用的是下一条)
-#一般取总样本数开平方取上界. 上一个分组算法一般认为不合理
-#分得越细，和曲线偏差越大,但好看；分得粗，不好看
+'''
+分组的数量在5－12之间较为适宜(本程序用的是下一条)
+一般取总样本数开平方取上界. 上一个分组算法一般认为不合理
+分得越细，和曲线偏差越大,但好看；分得粗，不好看
+'''
 sample_count = 1000
 group_count = int(np.sqrt(sample_count) + 0.9999) 
 
@@ -165,6 +190,17 @@ plt.plot(gauss_x2, gauss_y2, 'b-')
 gauss_x2, gauss_y2 = gen_gauss_distribute_pdf_from_dist_table(0, 4)
 plt.plot(gauss_x2, gauss_y2, 'y-')
 plt.savefig('images/norm_distribute.png', format='png')
+
+#guass dist, by box-muller method
+plt.clf()
+X1, X2 = gen_gauss_samples_by_BoxMuller(sample_count)
+plt.hist(X2, bins = group_count, normed=True, color='r')
+plt.hist(X1, bins = group_count, normed=True, color='b', alpha=0.5)
+plt.savefig('images/norm_distribute_by_boxmuller.png', format='png')
+
+coef = np.dot(X1-X1.mean(), X2-X2.mean()) /sample_count/(X1.std() * X2.std())
+print 'gen gauss indepedent rav by box muller method.'
+print 'std of X1: %.4f; std of X2: %.4f; coeffience between X1 and X2: %.4f' % (X1.std(), X2.std(), coef)
 
 #指数分布相关
 plt.clf()

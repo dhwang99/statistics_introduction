@@ -7,6 +7,8 @@ from scipy.stats import norm
 import pdb
 
 '''
+参数检验
+
 H0: mu_hat = mu0; H1: mu_hat != mu0
 
 X ~ N(mu, sigma), mu,sigma都未知

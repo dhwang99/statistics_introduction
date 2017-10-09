@@ -6,6 +6,8 @@ from scipy.stats import chi,norm,poisson
 import pdb
 
 '''
+分布检验
+
 对chi_square 检验而言，自由度为样本的区间个数 - 1(k-1个区间的概率定了后，剩下的区间概率就确定了)
 
 fi: 实测第i个区间的频数
