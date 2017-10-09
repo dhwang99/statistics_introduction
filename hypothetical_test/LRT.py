@@ -1,33 +1,43 @@
 #encoding: utf8
 
 import numpy as np
-from scipy.stats import chi,norm,poisson
+from scipy.stats import chi2,norm,poisson
 
 import pdb
 
 '''
 似然比检验, likelyhood ratio test
 还是参数检验
+wald test 适合标量检查;  LRT适合检测向量参数
 lambda = 2 * log(sup(seta in all) L(seta) / sup(seta in SETA0) L(seta0))
        = 2 * log(L(seta_hat) / L(seta0_hat))
 
 seta_hat == seta0_hat: lambda == 0
 seta_hat >> seta0_hat: lambda >> 0
 
-p for 豌豆
+lambda ~ chi(r-q): r为seta的参数个数(自由度)， q为seta0参数个数
+
+test for pea
 '''
 
-def p_mle():
+def lrt_for_pea():
     pmf = np.array([9./16, 3./16, 3./16, 1./16])
     test_data = np.array([315, 101, 108, 32])
     test_sum = test_data.sum() * 1.
 
+    r = len(pmf) - 1
+    q = 0
+
+    seta_hat = test_data/test_sum 
+
+    #sum(Xi * log(pi_hat / pi) * 2
+    lambs = 2 * np.log(seta_hat/pmf) * test_data
+    lamb = lambs.sum()
     
+    p_val = 1 - chi2.cdf(lamb, r-q)
 
-
-
-
-
+    print "p value for pea: %.4f" % p_val
+    
 
 '''
 战争分布p值
@@ -44,7 +54,7 @@ fi 223   142   48    15+4
    0.58  0.31  0.18  0.01+0.02
 n  216.7 149.5 51.6  12.0+2.16 
 '''
-def chi_for_war():
+def lrt_for_war():
     alpha = 0.05
     years = np.linspace(0, 4, 5)
     wars = np.array([223, 142, 48, 15, 4])
@@ -75,4 +85,4 @@ def chi_for_war():
 
 
 if __name__ == "__main__":
-    chi_for_war()
+    lrt_for_pea()
