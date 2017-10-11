@@ -23,7 +23,7 @@
 
 >   备注下：用plt.bar生成柱状图时，需要 加条件:align='edge', 默认取 middle
 
->   code:[probility/transformations_of_random_variables.py](probility/gen_distribute_from_U.py)
+>   code:[probility/gen_dist_from_U.py](probility/gen_distribute_from_U.py)
 
 >   images:[probility/images](probility/images)
 

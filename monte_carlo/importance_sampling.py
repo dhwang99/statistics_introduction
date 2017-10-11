@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     g_mu = 0.
     g_sigma = 1.
-    params = [(0., 1.), (4., 1.), (4., 2.), (4., 4)] 
+    params = [(0., 1.), (4., 1.), (4., 2.), (4., 4)]
     for g_mu, g_sigma in params:
         hat_vals, hat_vals_w = test_truncated_norm(g_mu, g_sigma, N, test_count) 
         print "\nreal value: %s; g_mu:%s; g_sigma:%s; hat_mean: %s; hat_std: %s; weighted_mean:%s; weighted_std: %s " %  \
