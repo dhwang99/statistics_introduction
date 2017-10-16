@@ -33,26 +33,6 @@ a = (3/(16 * V) - 1)/4
 
 gamma_values = {}
 
-'''
-gamma(0.5) = sqrt(pi)
-gamma(1) = 1
-
-gamma(alpha) = (alpha - 1) gamma(alpha - 1)
-'''
-def init_gamma_values():
-    gamma_values[0] = 1e10   #sim to infty
-    gamma_values[0] = 10000
-    gamma_values[0.5] = np.sqrt(np.pi)
-    gamma_values[1] = 1
-    
-    for i in range(1, 1000):
-        a1 = i - 0.5
-        a2 = i 
-
-        gamma_values[a1+1] = a1 * gamma_values[a1]
-        gamma_values[a2+1] = a2 * gamma_values[a2]
-
-init_gamma_values()
 
 def beta_pdf(x, a, b):
     gamma_a = gamma_values[a] 
@@ -97,5 +77,10 @@ if __name__ == '__main__':
     plt.clf()
     ab_list = [(5, 1), (5, 3), (5, 5), (5, 7), (5,10), (5, 20)]
     fname = 'images/beta03.png'
+    draw_beta_dist(ab_list, fname)
+
+    plt.clf()
+    ab_list = [(9, 7), (7, 4)]
+    fname = 'images/beta04.png'
     draw_beta_dist(ab_list, fname)
     
