@@ -2,6 +2,7 @@
 
 import numpy as np
 import pdb
+from scipy.stats import f as f_stats
 
 '''
 load data from file
@@ -66,7 +67,8 @@ def leasq(X_train, Y_train, X_test, Y_test):
 
     #计算训练误差
     test_err = np.dot(X, beta_hat.T) - Y
-    print "test squre error:", np.dot(test_err, test_err)/len(Y)
+    test_err = np.dot(test_err, test_err)/len(Y)
+    print "test squre error:", test_err
 
     #计算beta的样本协方差
     sigma2_hat = np.dot(test_err, test_err) / (len(X) - X.shape[1] - 1)
@@ -86,7 +88,7 @@ def leasq(X_train, Y_train, X_test, Y_test):
     pre_err = np.dot(X_test, beta_hat) - Y_test
     pre_err = np.dot(pre_err, pre_err) /len(Y_test)
     print "predict mean error: %.4f" % pre_err
-    return beta_hat, z_scores
+    return beta_hat, z_scores, test_err, pre_err
 
 '''
 用zscore进行特征选择
@@ -99,24 +101,69 @@ def leasq_select_by_zscore(X, Y, X_t, Y_t, z_scores):
     X_t = X_t[:, f_i]
     
     print "features: %s" % f_i
-    leasq(X, Y, X_t, Y_t) 
-    
-'''
-用F值进行特征选择
-'''
-def leasq_select_by_F_value(X, Y, X_t, Y_t, z_scores):
-    #feature index
-    z_scores = np.array(z_scores)
-    f_i = np.where(z_scores > 1.95)[0]
-    X = X[:, f_i]
-    X_t = X_t[:, f_i]
+    return leasq(X, Y, X_t, Y_t)
 
-    leasq(X, Y, X_t, Y_t) 
+'''
+用F值进行系数显著性检查
+F = [(RSS1-RSS0)/(p1-p0)] / [RSS1/(n-p1-1)]
+F ~ F(p1-p0, n-p1-1)
+n比较大时，F ~ chi2(p1 - p0)
+RSS1为较大模型的rss
+'''
+def f_value_check(rss1, rss0, fi1, fi0, n):
+    df0 = fi1 - fi0
+    df1 = n - fi1 - 1
+    F = np.abs(rss1 - rss0) * df0 / (df1 * rss1)
+    ppf = f_stats.ppf(F, df0, df1)
+
+    return ppf
+
+
+'''
+子集选择
+穷举法找最优模型 
+'''
+import itertools
+def exhaustive_select(X, Y, X_t, Y_t):
+    beta_count = X.shape[1]
+    beta_id_lst = range(1, beta_count) 
+    mse_lst = []
+    for sub_count in range(0, beta_count):
+        sub_list = list(itertools.combinations(beta_id_lst, sub_count))
+        mse_train = 1e10
+        mse_test = 1e10
+        test_sub = []
+        for sub in sub_list:
+            sub = np.hstack((np.array([0]), np.array(sub, dtype='int')))
+            _X = X[:, sub]
+            _X_t = X_t[:, sub]
+    
+            beta, z_scores, train_err, test_err = leasq(_X, Y, _X_t, Y_t)
+            if mse_test > test_err:
+                mse_train = train_err
+                mse_test = test_err
+                test_sub = sub
+
+        mse_lst.append((sub_count, test_sub, mse_train, mse_test))
+    
+    print mse_lst
+
+    return
+            
+
 
 
 if __name__ == '__main__':
     X, Y, X_t, Y_t = load_data()
-    beta, z_scores = leasq(X, Y, X_t, Y_t)
+    beta, z_scores, test_err, pre_err = leasq(X, Y, X_t, Y_t)
 
     print "\n\n leasq select by zscore:"
-    leasq_select_by_zscore(X, Y, X_t, Y_t, z_scores)
+    b2, z2, t2, p2 = leasq_select_by_zscore(X, Y, X_t, Y_t, z_scores)
+    
+    f_v = f_value_check(test_err, t2, len(beta), len(b2), len(X))
+    print "\n\nf value check:", f_v
+
+    print "\n\nexhaustive_select:"
+
+    exhaustive_select(X, Y, X_t, Y_t)
+
