@@ -6,7 +6,6 @@ from scipy.stats import gamma
 import pdb
 
 '''
-
 Gamma 分布
 
 '''

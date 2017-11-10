@@ -48,8 +48,8 @@ def comp_wilson_vs_normal(n, p, alpha):
 binomal test
 '''
 
-p = 0.1
-n = 30
+p = 0.16
+n = 50
 a = 0
 b = 1
 

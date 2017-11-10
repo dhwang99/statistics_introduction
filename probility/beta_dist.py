@@ -83,4 +83,3 @@ if __name__ == '__main__':
     ab_list = [(9, 7), (7, 4)]
     fname = 'images/beta04.png'
     draw_beta_dist(ab_list, fname)
-    
