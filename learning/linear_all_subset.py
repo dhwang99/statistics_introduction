@@ -61,7 +61,6 @@ AIC(M) = -2L(M) + 2p \sim RSS(M) + 2*sigma_hat^2 * p \sim RSS(M)/sigma_hat^2 + 2
 强调!!!!!!!
 RSS是 trainX的 RSS !!!!!!!!
 '''
-
 from linear_regression import leasq
 
 def all_subset_regression_by_AIC():
@@ -201,13 +200,13 @@ if __name__ == '__main__':
     '''
     重复了10次，从结果看，书上给的算法是很不稳定的
     '''
-    for i in range(10):
+    for i in range(2):
         plt.clf()
         print ""
         #子集选择: CV评价
-        print "crass validation, same_to_book=False"
+        print "cross validation, same_to_book=False"
         all_subset_regression_by_CV()
     
         #子集选择: CV评价, 和教材一致
-        print "crass validation, same_to_book=True"
+        print "cross validation, same_to_book=True"
         all_subset_regression_by_CV(same_to_book=True)

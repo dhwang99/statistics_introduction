@@ -25,12 +25,15 @@ def forward_subset_regression_AIC(X, Y, X_t, Y_t):
     last_score = 1e10
     last_subids = np.array([0])
     b, z_scores, _tre, _testmse, sigma2_hat_all, se_beta_hat = leasq(X, Y, X_t, Y_t)
+    test_mse = 0.
+    train_mse = 0.
     
     while len(beta_id_lst) > 0:
         min_mse = 1e10
         min_id = 0
         _subs = np.hstack((last_subids, np.array([0])))
         min_subs = np.copy(_subs)
+        min_test_mse = 1e10
         for id in range(len(beta_id_lst)):
             _subs[-1] = beta_id_lst[id]
             _X = X[:, _subs]
@@ -38,6 +41,7 @@ def forward_subset_regression_AIC(X, Y, X_t, Y_t):
             beta, z_scores, _tre, _testmse, sig2_hat, se_beta_hat = leasq(_X, Y, _X_t, Y_t)
             if _tre < min_mse:
                 min_mse = _tre
+                min_test_mse = _testmse
                 min_id = id 
                 min_subs = np.copy(_subs)
         
@@ -47,10 +51,13 @@ def forward_subset_regression_AIC(X, Y, X_t, Y_t):
            last_score = min_score
            beta_id_lst.pop(min_id)
            last_subids = np.copy(min_subs)
+           test_mse = min_test_mse
+           train_mse = min_mse
         else:
            break
 
-    print "best subset is: %s, AIC: %.4f" % (last_subids, last_score)
+    print "best subset is: %s, AIC: %.4f train_mse: %.4f test_mse: %.4f" % \
+            (last_subids, last_score, train_mse, test_mse)
 
 '''
 子集选择, backward AIC
@@ -65,9 +72,12 @@ def backward_subset_regression_AIC(X, Y, X_t, Y_t):
     last_subids = np.array([0])
     b, z_scores, _tre, _testmse, sigma2_hat_all, se_beta_hat = leasq(X, Y, X_t, Y_t)
     last_subids = np.array(beta_id_lst,dtype='int')
+    test_mse = 0.
+    train_mse = 0.
     
     while len(beta_id_lst) > 0:
         min_mse = 1e10
+        min_test_mse = 1e10
         min_id = 0
         min_subs = None  
         for id in range(len(beta_id_lst)):
@@ -79,6 +89,7 @@ def backward_subset_regression_AIC(X, Y, X_t, Y_t):
             beta, z_scores, _tre, _testmse, sig2_hat, se_beta_hat = leasq(_X, Y, _X_t, Y_t)
             if _tre < min_mse:
                 min_mse = _tre
+                min_test_mse = _testmse
                 min_id = id 
                 min_subs = np.copy(_subs)
         min_score = min_mse*len(Y)/sigma2_hat_all + 2*(len(min_subs)-1)
@@ -87,10 +98,13 @@ def backward_subset_regression_AIC(X, Y, X_t, Y_t):
            last_score = min_score
            beta_id_lst.pop(min_id)
            last_subids = np.copy(min_subs)
+           test_mse = min_test_mse
+           train_mse = min_mse
         else:
            break
 
-    print "best subset is: %s, AIC: %.4f" % (last_subids, last_score)
+    print "best subset is: %s, AIC: %.4f train_mse: %.4f test_mse: %.4f" % \
+            (last_subids, last_score, train_mse, test_mse)
 
 
 '''
