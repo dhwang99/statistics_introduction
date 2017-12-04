@@ -79,25 +79,25 @@ def leasq_with_L2_new():
 
     #计算不同lamb下的训练误差和方差
     dfs = np.zeros(len(lamb_lst))
-    rss_means = np.zeros(len(lamb_lst))
-    rss_mean_stds = np.zeros(len(lamb_lst))
+    mse_means = np.zeros(len(lamb_lst))
+    mse_mean_stds = np.zeros(len(lamb_lst))
 
     for lid in range(len(lamb_lst)):
         #lambda[lid]下的df
         dfs[lid] = train_mid_rst[0][lid][2]
         #K折CV下误差均值和标准差
         test_rsses = np.array(map(lambda i:train_mid_rst[i][lid][4], range(0,K)))
-        rss_means[lid] = test_rsses.mean()
+        mse_means[lid] = test_rsses.mean()
         #!!!!!注意：这儿求的是估计的标准差 1/K mean(sum(Xi)),  故而要除以K
-        rss_mean_stds[lid] = test_rsses.std()/np.sqrt(K)
+        mse_mean_stds[lid] = test_rsses.std()/np.sqrt(K)
 
-    best_lamb_id, minid = one_std_error_rule(rss_means, rss_mean_stds)
+    best_lamb_id, minid = one_std_error_rule(mse_means, mse_mean_stds)
     print "Best lambid: %d, lambda: %.4f, degree of free: %.4f" % (best_lamb_id, lamb_lst[best_lamb_id], dfs[best_lamb_id]) 
     
-    one_std_val = rss_means[minid] + rss_mean_stds[minid]
+    one_std_val = mse_means[minid] + mse_mean_stds[minid]
     plt.plot((dfs[0],dfs[-1]), (one_std_val, one_std_val), 'r-')
-    plt.errorbar(dfs, rss_means, yerr=rss_mean_stds, fmt='-o')
-    plt.savefig('images/rss_errorbar.png', format='png')
+    plt.errorbar(dfs, mse_means, yerr=mse_mean_stds, fmt='-o')
+    plt.savefig('images/mse_errorbar.png', format='png')
 
     #用K折选出来的最优lambda进行回归预测
 

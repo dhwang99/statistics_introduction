@@ -12,9 +12,10 @@ from cv_common import gen_CV_samples_by_K_folds, one_std_error_rule
 '''
 子集选择
 穷举法找最优模型 
-注意：要求传入数据有偏置，这样可以算出截距情况, 不需要对Y进行标准化(这个教材上的不同)
+注意：要求传入数据有偏置项，这样可以算出截距情况, 不需要对Y进行标准化(这个教材上的不同)
 '''
 import itertools
+
 def all_subset_regression(X, Y, X_t, Y_t, comp_testmse=1):
     beta_count = X.shape[1]
     beta_id_lst = range(1, beta_count)
