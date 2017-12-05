@@ -50,12 +50,12 @@ def lwlrs(xs, train_X, train_Y, k):
 '''
 基于X,Y数据，用k-fold方法选取出最优的k
 '''
-def select_k(X, Y):
+def select_k(X, Y, log_beg=0, log_end=3, imgpath=None):
     CV_K = 10
     k_size = 100
     cv_samples = gen_CV_samples_by_K_folds(X, Y, CV_K)
 
-    ks = np.logspace(0, 3, k_size)
+    ks = np.logspace(log_beg, log_end, k_size)
     K_mses = np.zeros(k_size)
     K_stds = np.zeros(k_size)
 
@@ -76,18 +76,45 @@ def select_k(X, Y):
         print "CV for K: %.4f, mse: %.4f, std: %.4f" % (k, K_mses[ki], K_stds[ki])
 
     best_kid = np.argmin(K_mses)
-
-    plt.errorbar(ks, K_mses, yerr=K_stds, fmt='-o')
-    plt.savefig('images/lwlr_course_cvmse_errorbar.png')
+    
+    if imgpath != None:
+        plt.errorbar(ks, K_mses, yerr=K_stds, fmt='-o')
+        plt.savefig(imgpath)
 
     return ks[best_kid]
 
-    
+def test_1d():
+    data = np.loadtxt('data/ex0.txt')
+    np.random.shuffle(data)
 
-if __name__ == "__main__":
+    n,m = data.shape
+
+    tlen = int(n * 0.7)
+    train_data = data[:tlen]
+    test_data = data[tlen:]
+
+    train_X = train_data[:, :-1]
+    train_Y = train_data[:,-1]
+
+    test_X = test_data[:,:-1]
+    test_Y = test_data[:,-1]
+
+    best_k = select_k(train_X, train_Y, log_beg=-3., log_end=3., imgpath='images/lwlr_1d_errorbar.png')
+    y_hats = lwlrs(test_X, train_X, train_Y, best_k)
+
+    p_errs = y_hats - test_Y
+    test_mse = np.dot(p_errs, p_errs)/len(test_Y)
+    test_std = p_errs.std()
+    #pdb.set_trace()
+
+    print ""
+    print "Predict, k: %.4f, mse: %.4f, std: %.4f" % (best_k, test_mse, test_std)
+
+   
+def test_course():
     train_X, train_Y, test_X, test_Y, dt_stand_fun = load_data(type=0, need_bias=1, y_standard=0)
 
-    best_k = select_k(train_X, train_Y)
+    best_k = select_k(train_X, train_Y, log_beg=0, log_end=4, imgpath='images/lwlr_prostate_errorbar.png')
     y_hats = lwlrs(test_X, train_X, train_Y, best_k)
 
     p_errs = y_hats - test_Y
@@ -96,4 +123,11 @@ if __name__ == "__main__":
 
     print ""
     print "Predict, k: %.4f, mse: %.4f, std: %.4f" % (best_k, test_mse, test_std)
+
+if __name__ == "__main__":
+    print "test 1d data:"
+    test_1d()
+
+    print "\n test course data:"
+    test_course()
 
