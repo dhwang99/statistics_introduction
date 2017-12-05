@@ -32,19 +32,19 @@ Y = beta * X + lambda * sum(beta^2)
 '''
 def leasq_with_L2_new():
     '''
-    注：实际训练时，标准化应该针对X_train_CV进行，不能把X_test_CV加进来, 避免影响样本的独立性
+    注：实际训练时，标准化应该针对train_X_CV进行，不能把test_X_CV加进来, 避免影响样本的独立性
         本试验为了方便，把这个加起来了
     '''
-    X_train, Y_train, X_test, Y_test, dt_stand_fun = load_data(type=1, need_bias=0, y_standard=1)
+    train_X, train_Y, test_X, test_Y, dt_stand_fun = load_data(type=1, need_bias=0, y_standard=1)
 
     K = 10
     lamb_lst = np.logspace(-5, 3, 30)
     train_mid_rst = []
-    cv_samples = gen_CV_samples_by_K_folds(X_train, Y_train, K)
+    cv_samples = gen_CV_samples_by_K_folds(train_X, train_Y, K)
 
     for ki in range(K):
         ki_rst = []
-        X, Y, X_test_CV, Y_test_CV = cv_samples[ki]
+        X, Y, test_X_CV, test_Y_CV = cv_samples[ki]
         U,D,V = np.linalg.svd(X)
         V = V.T
         D2 = D**2
@@ -67,8 +67,8 @@ def leasq_with_L2_new():
             train_rss = np.dot(train_err, train_err)/len(Y)
     
             #计算预测误差 
-            test_err = np.dot(X_test_CV, beta_hat) - Y_test_CV
-            test_rss = np.dot(test_err, test_err) /len(Y_test_CV)
+            test_err = np.dot(test_X_CV, beta_hat) - test_Y_CV
+            test_rss = np.dot(test_err, test_err) /len(test_Y_CV)
     
             #计算自由度
             df = np.sum(D2/(D2+lamb))
@@ -91,8 +91,12 @@ def leasq_with_L2_new():
         #!!!!!注意：这儿求的是估计的标准差 1/K mean(sum(Xi)),  故而要除以K
         mse_mean_stds[lid] = test_rsses.std()/np.sqrt(K)
 
+        print "CV for lambda: %.4f DF: %.4f  MSE: %.4f  STD: %.4f" % \
+                (lamb_lst[lid], dfs[lid], mse_means[lid], mse_mean_stds[lid])
+
     best_lamb_id, minid = one_std_error_rule(mse_means, mse_mean_stds)
-    print "Best lambid: %d, lambda: %.4f, degree of free: %.4f" % (best_lamb_id, lamb_lst[best_lamb_id], dfs[best_lamb_id]) 
+    best_lamb = lamb_lst[best_lamb_id]
+    print "Best lambid: %d, lambda: %.4f, degree of free: %.4f" % (best_lamb_id, best_lamb, dfs[best_lamb_id]) 
     
     one_std_val = mse_means[minid] + mse_mean_stds[minid]
     plt.plot((dfs[0],dfs[-1]), (one_std_val, one_std_val), 'r-')
@@ -100,6 +104,18 @@ def leasq_with_L2_new():
     plt.savefig('images/mse_errorbar.png', format='png')
 
     #用K折选出来的最优lambda进行回归预测
+    I = np.eye(train_X.shape[1])
+    XTY = np.dot(train_X.T, train_Y)
+    #注意：是加上 best_lamb*I, 不是减
+    #beta_hat = np.dot(np.linalg.inv(np.dot(train_X.T,train_X) - best_lamb*I), XTY) 
+    beta_hat = np.dot(np.linalg.inv(np.dot(train_X.T,train_X) + best_lamb*I), XTY) 
+
+    #计算预测误差 
+    test_err = np.dot(test_X, beta_hat) - test_Y
+    test_mse = np.dot(test_err, test_err) /len(test_Y)
+
+    print "test mse: %.4f, std of err: %.4f" % (test_mse, test_err.std())
+
 
 if __name__ == '__main__':
     print "leasq by L2:"

@@ -46,6 +46,7 @@ def lasso_leasq():
             ki_rst = []
             X_CV, Y_CV, X_t_CV, Y_t_CV = cv_samples[ki]
             # wait for coding
+            
     
             ki_rst.append((lamb, beta_hat, df, train_rss, test_rss))
         
@@ -66,7 +67,8 @@ def lasso_leasq():
         rss_mean_stds[lid] = test_rsses.std()/np.sqrt(K)
 
     best_lamb_id, minid = one_std_error_rule(rss_means, rss_mean_stds)
-    print "Best lambid: %d, lambda: %.4f, degree of free: %.4f" % (best_lamb_id, lamb_lst[best_lamb_id], dfs[best_lamb_id]) 
+    best_lamb = lamb_lst[best_lamb_id]
+    print "Best lambid: %d, lambda: %.4f, degree of free: %.4f" % (best_lamb_id, best_lamb, dfs[best_lamb_id]) 
     
     one_std_val = rss_means[minid] + rss_mean_stds[minid]
     plt.plot((dfs[0],dfs[-1]), (one_std_val, one_std_val), 'r-')
@@ -74,6 +76,7 @@ def lasso_leasq():
     plt.savefig('images/rss_errorbar.png', format='png')
 
     #用K折选出来的最优lambda进行回归预测
+
 
 if __name__ == '__main__':
     print "ridge leasq:"
