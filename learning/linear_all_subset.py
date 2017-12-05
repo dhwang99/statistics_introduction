@@ -201,7 +201,7 @@ if __name__ == '__main__':
     '''
     重复了10次，从结果看，书上给的算法是很不稳定的
     '''
-    for i in range(2):
+    for i in range(3):
         plt.clf()
         print ""
         #子集选择: CV评价

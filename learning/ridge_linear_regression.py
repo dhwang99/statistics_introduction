@@ -30,7 +30,7 @@ Y = beta * X + lambda * sum(beta^2)
     但在全局子集选择里，CV方法下又做了标准化（即除了方差）
     稍后这儿也试一下标准化后的结果
 '''
-def leasq_with_L2_new():
+def leasq_with_ridge():
     '''
     注：实际训练时，标准化应该针对train_X_CV进行，不能把test_X_CV加进来, 避免影响样本的独立性
         本试验为了方便，把这个加起来了
@@ -119,5 +119,5 @@ def leasq_with_L2_new():
 
 if __name__ == '__main__':
     print "leasq by L2:"
-    leasq_with_L2_new()
+    leasq_with_ridge()
     print ""
