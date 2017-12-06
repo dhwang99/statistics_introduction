@@ -27,7 +27,7 @@ J(X;seta) = 1/2n*(f(X) - Y)**2  + lambda * np.linalg.norm(seta, 1)
         = 1/n*sum_i[(seta * X_i - Y_i) * X_ij - seta_j * X_ij**2 + seta_j*X_ij**2] + r_l1
 
     let: 
-        p_j = -1/n*sum_i[(Y_i - seta * X_i) * X_ij + seta_j * X_ij**2]
+        p_j = 1/n*sum_i[(Y_i - seta * X_i) * X_ij + seta_j * X_ij**2]
         z_j = 1/n*sum_i(X_ij**2)
 
     ps = -p_j + seta_j*z_j + r_l1
