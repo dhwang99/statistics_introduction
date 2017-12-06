@@ -101,7 +101,7 @@ def leasq_with_ridge():
     one_std_val = mse_means[minid] + mse_mean_stds[minid]
     plt.plot((dfs[0],dfs[-1]), (one_std_val, one_std_val), 'r-')
     plt.errorbar(dfs, mse_means, yerr=mse_mean_stds, fmt='-o')
-    plt.savefig('images/mse_errorbar.png', format='png')
+    plt.savefig('images/ridge_mse_errorbar.png', format='png')
 
     #用K折选出来的最优lambda进行回归预测
     I = np.eye(train_X.shape[1])

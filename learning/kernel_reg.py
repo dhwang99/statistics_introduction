@@ -32,7 +32,7 @@ kernels = {
 
 kernels = {
      'box': lambda x:1./2 if (np.abs((x).sum()) <= 1) else 0.,    #f(x) = c,
-    'rbf':lambda x:np.exp(-(x**2).sum()/2),   #'norm':lambda x:np.prod(norm.pdf(x)),
+    'rbf':lambda x:np.exp(-np.linalg.norm(x,2)/2),   #'norm':lambda x:np.prod(norm.pdf(x)),
     'ep':lambda x:3./4*(1-(x**2).sum()) if ((x**2).sum()<=1) else 0,
     'cos':lambda x: 1./2*np.cos(np.sum(x)) if (np.abs((x).sum()) <= 1) else 0.,
 }
