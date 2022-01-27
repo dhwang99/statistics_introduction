@@ -1,5 +1,6 @@
 # statistics_introduction
 概率统计学入门。实现一些概率、采样、统计相关的算法
+建议看这个教材： All of Statistics， http://egrcc.github.io/docs/math/all-of-statistics.pdf
 
 ## 1. 概率入门的一些算法
 
